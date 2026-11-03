@@ -1,0 +1,14 @@
+packs/markti: dimension 0: 3 post pass(es), shadow=true at 2048 px / 56 blocks, terrain=true, water=true
+packs/markti: dimension -1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+packs/markti: dimension 1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+packs/markti-native: native markti_shaders 1.1.1: 3 stages, shader API 0.1, color grid and shadow/refraction resources validated
+dist/Markti Shader.zip: dimension 0: 3 post pass(es), shadow=true at 2048 px / 56 blocks, terrain=true, water=true
+dist/Markti Shader.zip: dimension -1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+dist/Markti Shader.zip: dimension 1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+dist/Markti Shaders Ultra Performance.zip: dimension 0: 3 post pass(es), shadow=true at 1024 px / 48 blocks, terrain=true, water=true
+dist/Markti Shaders Ultra Performance.zip: dimension -1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+dist/Markti Shaders Ultra Performance.zip: dimension 1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+dist/markti_shaders.hshader: native markti_shaders 1.1.1: 3 stages, shader API 0.1, color grid and shadow/refraction resources validated
+dist/markti_shaders_ultra.hshader: native markti_shaders_ultra 1.1.1: 3 stages, shader API 0.1, color grid and shadow/refraction resources validated
+dist/markti_shaders_mod.hnmod: native mod markti_shaders_mod 1.1.1: official bundle checks passed, hooks API 326, 16 files
+dist/markti_shaders_ultra_mod.hnmod: native mod markti_shaders_ultra_mod 1.1.1: official bundle checks passed, hooks API 326, 16 files

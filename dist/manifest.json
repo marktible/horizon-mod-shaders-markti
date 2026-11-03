@@ -1,7 +1,7 @@
 {
   "name": "Markti Shaders",
-  "version": "1.1.0",
-  "format": "Horizon native shader mod (.hshader), with GLSL compatibility packs",
+  "version": "1.1.1",
+  "format": "Horizon native mods (.hnmod), native shader packs (.hshader), GLSL compatibility ZIPs",
   "recommended_format": "native",
   "requires_custom_client": false,
   "tested_horizon": "nightly-2026-11-03-f42ef42",
@@ -38,8 +38,8 @@
       "name": "Markti Shaders Ultra Performance",
       "preset": "UltraPerformance",
       "format": "native",
-      "bytes": 10890,
-      "sha256": "3edcc88227c81360a0474b2cee5a7e32171bf395ae4e1a9a3df900f1076bd04c",
+      "bytes": 10889,
+      "sha256": "4250b755189fdccca5823418be58c5f746fabe488cc0d8f31fc71a704db8e9c6",
       "settings": {
         "reflection_steps": 12,
         "colored_lights": true,
@@ -88,8 +88,8 @@
       "name": "Markti Shader",
       "preset": "Performance",
       "format": "native",
-      "bytes": 10874,
-      "sha256": "ae61390a2d92a6db458d471c7735e78efadadaad51c3a6d356c8cbcca7020620",
+      "bytes": 10872,
+      "sha256": "c9d2c69ce7e9982bf5a8b4be84d514228923393f761b0ea338c7ac1651a01b98",
       "settings": {
         "reflection_steps": 24,
         "colored_lights": true,
@@ -106,6 +106,30 @@
         "exposure": 1.0,
         "saturation": 1.05
       }
+    }
+  ],
+  "mods": [
+    {
+      "id": "markti_shaders_ultra_mod",
+      "name": "Markti Shaders Ultra Performance",
+      "file": "markti_shaders_ultra_mod.hnmod",
+      "preset": "UltraPerformance",
+      "hooks": 326,
+      "source": "native-mod/bundles/markti_shaders_ultra_mod",
+      "shader_folder": "native-markti_shaders_ultra_mod",
+      "bytes": 16082,
+      "sha256": "7ce6842b7e548720f1e360550a7cf96d59e13e913a519f0aa958788d93ff40f7"
+    },
+    {
+      "id": "markti_shaders_mod",
+      "name": "Markti Shader",
+      "file": "markti_shaders_mod.hnmod",
+      "preset": "Performance",
+      "hooks": 326,
+      "source": "native-mod/bundles/markti_shaders_mod",
+      "shader_folder": "native-markti_shaders_mod",
+      "bytes": 15867,
+      "sha256": "4ab735f105138baa3e0993186a1c4be4ac43dc9cf42387e944f04d1c6a04000a"
     }
   ]
 }

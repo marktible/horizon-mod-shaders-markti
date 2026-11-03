@@ -62,3 +62,14 @@ mirror behavior, metals, tinted glass shadows and both non-Overworld dimensions.
 Use a non-falling material for a floating fixture's pool bed.
 `--scale 75` may be used for a separate native post-resolution mapping check;
 it affects only the private preview, not player settings or the default scale.
+
+For native-mod packaging changes, run `tools/check_native_mods.py` and
+`tools/check_mod_api.py`. The first compares GitHub source with `.hnmod` archives
+and their embedded `.hshader` payloads, compiles/runs both installers in temporary
+homes, and checks settings preservation and write failure behavior. The second
+type-checks both trait API crates against the real official client library in a
+temporary Cargo workspace, with the upstream compiler patches and lock versions.
+It disables optional audio/gamepad features only for this library check; it does
+not launch or install a client, use resources or touch a save. These commands may
+run while a player game is open; runtime/world tests still follow the closed-save
+workflow above. Test GitHub imports in private launcher/game homes too.

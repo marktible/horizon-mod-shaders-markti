@@ -12,12 +12,14 @@ __pycache__/
 /accounts/
 /resources/
 
-# Only the two public shader artifacts belong in dist.
+# Only current public shader packages and source-only native mod bundles belong in dist.
 /dist/*
 !/dist/Markti Shader.zip
 !/dist/Markti Shaders Ultra Performance.zip
 !/dist/markti_shaders.hshader
 !/dist/markti_shaders_ultra.hshader
+!/dist/markti_shaders_mod.hnmod
+!/dist/markti_shaders_ultra_mod.hnmod
 !/dist/manifest.json
 !/dist/SHA256SUMS
 

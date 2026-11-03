@@ -4,6 +4,10 @@ use horizon_shaders::{
 };
 use std::{path::Path, process::ExitCode};
 
+#[cfg(test)]
+#[path = "../native-mod/installer.rs"]
+mod native_installer;
+
 fn reads(program: &horizon_shaders::PostProgram, sampler: &str) -> bool {
     program
         .program
@@ -12,6 +16,58 @@ fn reads(program: &horizon_shaders::PostProgram, sampler: &str) -> bool {
 }
 
 fn check(path: &Path) -> Result<(), String> {
+    if path.extension().is_some_and(|e| e == "hnmod") {
+        let bundle = horizon_mods::index::native::Bundle::read(path)?;
+        if bundle.manifest.hooks != Some(326) {
+            return Err("Markti's installer requires native hook API 326".into());
+        }
+        let prefix = format!("mixins/{}/", bundle.manifest.id);
+        let source = std::str::from_utf8(
+            bundle
+                .files
+                .get(&format!("{prefix}horizon-mixin.toml"))
+                .unwrap(),
+        )
+        .map_err(|e| e.to_string())?;
+        let manifest: toml::Value = toml::from_str(source).map_err(|e| e.to_string())?;
+        if manifest
+            .get("api")
+            .and_then(|v| v.get("path"))
+            .and_then(|v| v.as_str())
+            != Some("api")
+            || [
+                "injection",
+                "crate",
+                "post_build",
+                "module",
+                "state",
+                "bridge",
+            ]
+            .iter()
+            .any(|key| manifest.get(key).is_some())
+        {
+            return Err("Markti uses only its trait-mod API package".into());
+        }
+        for required in [
+            "api/Cargo.toml",
+            "api/src/lib.rs",
+            "api/src/payload.rs",
+            "api/src/installer.rs",
+            "api/data/pack/horizon-shaders.toml",
+        ] {
+            if !bundle.files.contains_key(&format!("{prefix}{required}")) {
+                return Err(format!("Native installer is missing {required}"));
+            }
+        }
+        println!(
+            "{}: native mod {} {}: official bundle checks passed, hooks API 326, {} files",
+            path.display(),
+            bundle.manifest.id,
+            bundle.manifest.version,
+            bundle.files.len()
+        );
+        return Ok(());
+    }
     if horizon_shader_api::package::is_pack(path) {
         let pack = horizon_shader_api::Pack::read(path)?;
         let report = horizon_shader_api::check(&pack).map_err(|problems| {

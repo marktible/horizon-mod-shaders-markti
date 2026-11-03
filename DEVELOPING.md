@@ -9,7 +9,8 @@ Never claim an unrun check or test against a player's live save.
 Markti provides native `.hshader` shader mods for **official Horizon**, plus GLSL
 compatibility ZIPs. There are exactly two named presets in these two formats:
 **Markti Shaders Ultra Performance** and **Markti Shader** (the former Performance
-preset). This is the official native shader API, not a compiled Rust `.hnmod`.
+preset). The renderer uses the official native shader API. Source-only Rust
+`.hnmod` bundles also support the launcher's Add from GitHub workflow.
 Balance, Quality and Raytraced are retired. The native
 Radiance client fork and unfinished 3.1.3 tracing work are archived under
 `.archive/radiance-legacy-2026-11-03`; they are not build inputs or supported releases.
@@ -25,6 +26,8 @@ Horizon's per-pack settings sidecars attached across pack updates.
 | --- | --- |
 | [packs/markti/shaders](packs/markti/shaders) | Authoritative GLSL and standard block/item mappings |
 | [packs/markti-native](packs/markti-native) | Native WGSL material/water/sky/post source and typed options |
+| [native-mod/installer.rs](native-mod/installer.rs) | Shared native mod installer; source bundles are generated under `native-mod/bundles` |
+| [tools/check_mod_api.py](tools/check_mod_api.py) | Compile both trait API crates against the actual official client library in private build storage |
 | [horizon-registry.toml](horizon-registry.toml) | Public shader catalog page metadata |
 | [registry](registry) | Candidate entries for the two native shader IDs |
 | [lib/settings.glsl](packs/markti/shaders/lib/settings.glsl) | Option definitions and base defaults |
@@ -48,11 +51,16 @@ historical implementation names, not native-client dependencies.
 cargo run --release -- packs/markti
 python3 tools/package.py
 cargo run --locked --release -- packs/markti packs/markti-native dist/*.zip dist/*.hshader
+python3 tools/check_native_mods.py
+python3 tools/check_mod_api.py --jobs 1
+cargo run --locked --release -- dist/*.hnmod
 cargo test
 cargo fmt --check
 ```
 
-Packaging builds the two named presets in native and GLSL formats. Do not build a custom Horizon client.
+Packaging builds the two named presets in native and GLSL formats, plus two
+source-only native mod bundles. The launcher builds supported trait extensions;
+do not restore the retired custom renderer fork.
 Use the installed official binary for [isolated visual checks](docs/testing.md),
 then verify options change, save and survive a restart. Test both packs in the
 Overworld, Nether and End. Validate water, foliage and reflective material behavior
@@ -257,6 +265,57 @@ passed the native source/artifact/catalog checks and nine GLSL loader cases.
 Documentation validation passed 47 local links and seven shell examples. The
 publication audit found 117 tracked files (about 317 KiB), with no game assets,
 private session data, native game binaries or credential material.
+
+## GitHub native-mod installation correction (1.1.1)
+
+The Add from GitHub error is a format mismatch: 1.1.0 provided `.hshader` packs,
+while that launcher screen requires a native mod bundle. `native-mod/installer.rs`
+now owns a small installer shared by two generated unpacked bundles under
+`native-mod/bundles`. `tools/package.py` emits their source-only `.hnmod` archives
+and keeps the embedded shader files identical to the corresponding `.hshader`.
+The frame hook installs each pack once, including on the title screen, without
+changing the selected shader, resolution, sidecars or unrelated files. Folder
+names `native-<mod-id>` let Horizon's Mods toggle pause the matching pack.
+Both bundles implement the stable `Hooks::frame` trait method and require API 326 for
+`native_instance_dir`; the recorded Horizon commit is the tested baseline rather
+than a forced pin on later clients with that hook API. This is a supported native
+extension to official Horizon, separate from the retired custom client fork.
+The initial injection-based prototype failed the real horizon-mixins staging
+check (`E_UNSUPPORTED_MACRO` in the target module). The final bundles instead use
+`[api]` trait packages with no injection/module/state/crate/post-build tables, so
+the launcher skips mixin transformation. `tools/check_mod_api.py` checks their
+real `Hooks`, `Host` and `FrameEvent` types against the official client library.
+`tools/check_native_mods.py` checks archive/source parity and embedded shader
+identity, and compiles/runs the standard-library payload in private homes.
+The draft-release workflow deliberately attaches no `.hnmod` assets: this
+launcher's GitHub resolver picks the first such asset, whereas a tag's source
+archive discovers both unpacked bundles and offers a choice. The `.hnmod` files
+remain available in `dist/`.
+
+Both final trait API crates passed `cargo check` against the real pinned
+`horizon-client`, including its generated `Hooks`, `Host` and `FrameEvent` types,
+with no registry dependencies outside the official lock. The isolated check
+disables optional audio/gamepad features, compiles no executable and opens no
+world. The root four unit tests pass; each generated payload separately passes
+the two installer regressions and an actual embedded-file installation in a
+private home. Checks cover repeat installation without rewriting equal files,
+repair of old files, preservation of selection/resolution/sidecars/other packs,
+and failure before publishing a new manifest. The official validator passes nine
+GLSL dimension cases, three native shader checks and both `.hnmod` checks.
+All six artifacts and unpacked sources reproduce byte for byte. Formatting,
+Clippy with warnings denied, Python syntax and workflow YAML/shell checks pass.
+CI also type-checks both trait crates in a separate `native-api` job.
+
+All seven WGSL programs and both GLSL ZIPs were compared byte for byte with the
+GPU-tested 1.1.0 release and are unchanged; native package identity advances to
+1.1.1. No new GPU launch, full launcher game build or benchmark is claimed for
+this packaging correction. A player game was open, so its profile and save were
+not used for testing or installation. See [the sanitized summary](reports/validation-1.1.1.json)
+and [installation instructions](docs/mod-install.md).
+A clean staged export reproduced the six artifacts and both unpacked bundles,
+then passed the payload installation tests and documentation check (61 links,
+eight shell blocks). The publication audit checked 159 tracked files and found
+no private environment paths or game/session data directories.
 
 ## Limits and maintenance
 

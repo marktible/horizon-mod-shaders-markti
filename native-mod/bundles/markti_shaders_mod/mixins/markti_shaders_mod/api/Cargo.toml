@@ -1,0 +1,9 @@
+[package]
+name = "markti-shaders-mod-installer"
+version = "1.1.1"
+edition = "2024"
+license = "MIT"
+publish = false
+
+[dependencies]
+horizon-client = { git = "https://github.com/horizon-rust/horizon", rev = "f42ef42ef6ceccb3c6a20bea2481d87949a51c81" }

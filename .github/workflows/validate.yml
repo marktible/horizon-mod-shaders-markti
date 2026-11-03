@@ -29,7 +29,19 @@ jobs:
       - name: Rebuild and validate both packs
         run: |
           python3 tools/package.py
-          git diff --exit-code -- dist
-          cargo run --locked --release -- packs/markti packs/markti-native dist/*.zip dist/*.hshader
+          git diff --exit-code -- dist native-mod/bundles
+          python3 tools/check_native_mods.py
+          cargo run --locked --release -- packs/markti packs/markti-native dist/*.zip dist/*.hshader dist/*.hnmod
       - name: Check documentation
         run: python3 tools/check_docs.py
+
+  native-api:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Fetch the official API source
+        run: ./tools/bootstrap.sh
+      - name: Compile both native trait mods against the official client library
+        run: python3 tools/check_mod_api.py --jobs 2

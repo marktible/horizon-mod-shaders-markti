@@ -20,13 +20,15 @@ jobs:
       - name: Build deterministic native assets
         run: |
           python3 tools/package.py
-          git diff --exit-code -- dist
+          git diff --exit-code -- dist native-mod/bundles
       - name: Create a draft for review
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
           markti_tag=$(python3 -c 'import json; print("v" + json.load(open("dist/manifest.json"))["version"])')
           mkdir -p "$RUNNER_TEMP/markti-native-release"
+          # GitHub installs scan the tag archive for both mods. A .hnmod asset
+          # would make this launcher select only the first asset instead.
           awk '/\.hshader$/ { print }' dist/SHA256SUMS > "$RUNNER_TEMP/markti-native-release/SHA256SUMS"
-          gh release create "$markti_tag" dist/markti_shaders.hshader dist/markti_shaders_ultra.hshader "$RUNNER_TEMP/markti-native-release/SHA256SUMS" \
+          gh release create "$markti_tag" dist/*.hshader "$RUNNER_TEMP/markti-native-release/SHA256SUMS" \
             --draft --target "$GITHUB_SHA" --title "Markti Shaders $markti_tag" --notes-file CHANGELOG.md

@@ -1,0 +1,189 @@
+{
+  "schema_version": 1,
+  "version": "1.1.1",
+  "tested_horizon": "nightly-2026-11-03-f42ef42",
+  "loader_revision": "f42ef42ef6ceccb3c6a20bea2481d87949a51c81",
+  "purpose": "Fix Add from GitHub by providing actual discoverable native mod source bundles.",
+  "native_hooks_api": 326,
+  "native_mod_ids": [
+    "markti_shaders_ultra_mod",
+    "markti_shaders_mod"
+  ],
+  "checks": {
+    "glsl_dimension_cases": 9,
+    "native_shader_source_and_artifact_checks": 3,
+    "official_native_bundle_checks": 2,
+    "root_unit_tests": 4,
+    "generated_payload_regressions": {
+      "presets": 2,
+      "tests_each": 2,
+      "result": "passed"
+    },
+    "embedded_payload_installation_in_private_homes": "passed for both presets",
+    "actual_official_client_trait_api_compilation": "passed for both presets",
+    "native_api_check_optional_features": "audio and gamepad disabled for library type check only",
+    "native_api_dependencies_outside_official_lock": false,
+    "archive_to_github_source_and_standalone_shader_identity": "passed",
+    "deterministic_six_artifacts_and_unpacked_sources": "passed",
+    "cargo_fmt": "passed",
+    "cargo_clippy_all_targets_warnings_denied": "passed",
+    "python_syntax": "passed",
+    "workflow_yaml_and_shell_syntax": "passed",
+    "documentation_links": 61,
+    "documentation_shell_examples": 8,
+    "clean_staged_export_artifacts_installers_docs": "passed",
+    "audited_tracked_files": 159
+  },
+  "shader_regression": {
+    "wgsl_files_byte_identical_to_1_1_0": 7,
+    "glsl_archives_byte_identical_to_1_1_0": 2,
+    "prior_gpu_evidence": "validation-1.1.0.json",
+    "new_gpu_launch": false,
+    "performance_measured": false
+  },
+  "installation": {
+    "player_profile_modified_by_this_change": false,
+    "live_save_used": false,
+    "private_payload_checks_preserved": [
+      "shader selection",
+      "resolution",
+      "settings sidecar",
+      "other shader pack"
+    ],
+    "mod_installation": "Launcher Add from GitHub, then Build & Play; pick the installed shader in game."
+  },
+  "artifacts": {
+    "packs": [
+      {
+        "file": "Markti Shaders Ultra Performance.zip",
+        "name": "Markti Shaders Ultra Performance",
+        "preset": "UltraPerformance",
+        "format": "glsl",
+        "bytes": 36958,
+        "sha256": "110c3c272154fb4ea4ccd0df22500e535d7e24e8f8580827902bda974d170e8c",
+        "settings": {
+          "WATER_REFRACTION": "1",
+          "WATER_CLARITY": "1.0",
+          "WATER_CAUSTICS": "0",
+          "COMPACT_WATER_BUFFER": "1",
+          "WATER_RIPPLE_STRENGTH": "0.5",
+          "SURFACE_REFLECTIONS": "0",
+          "SHADOW_RESOLUTION": "1024",
+          "SHADOW_DISTANCE": "48.0",
+          "SHADOW_FILTER": "0",
+          "BLOOM_STRENGTH": "0.08",
+          "SSR_STEPS": "12",
+          "AO_SAMPLES": "4",
+          "AO_STRENGTH": "0.0",
+          "SHADOW_TEMPORAL": "0",
+          "HELD_LIGHTS": "1",
+          "COLORED_LIGHTS": "0"
+        }
+      },
+      {
+        "file": "markti_shaders_ultra.hshader",
+        "name": "Markti Shaders Ultra Performance",
+        "preset": "UltraPerformance",
+        "format": "native",
+        "bytes": 10889,
+        "sha256": "4250b755189fdccca5823418be58c5f746fabe488cc0d8f31fc71a704db8e9c6",
+        "settings": {
+          "reflection_steps": 12,
+          "colored_lights": true,
+          "block_light_strength": 1.0,
+          "shadow_softness": 1.0,
+          "pbr_materials": false,
+          "water_ripples": 0.5,
+          "water_reflections": true,
+          "water_mirror": false,
+          "water_caustics": false,
+          "water_clarity": 1.0,
+          "surface_reflections": false,
+          "ao_strength": 0.0,
+          "exposure": 1.0,
+          "saturation": 1.05
+        }
+      },
+      {
+        "file": "Markti Shader.zip",
+        "name": "Markti Shader",
+        "preset": "Performance",
+        "format": "glsl",
+        "bytes": 36957,
+        "sha256": "6600e50c1c044362ca05d06f979dfde52279d4195cb1b7772f4b643434129c11",
+        "settings": {
+          "WATER_REFRACTION": "1",
+          "WATER_CLARITY": "1.0",
+          "WATER_CAUSTICS": "1",
+          "COMPACT_WATER_BUFFER": "1",
+          "WATER_RIPPLE_STRENGTH": "0.85",
+          "SURFACE_REFLECTIONS": "1",
+          "SHADOW_RESOLUTION": "2048",
+          "SHADOW_DISTANCE": "56.0",
+          "SHADOW_FILTER": "2",
+          "BLOOM_STRENGTH": "0.16",
+          "SSR_STEPS": "20",
+          "AO_SAMPLES": "6",
+          "AO_STRENGTH": "0.60",
+          "SHADOW_TEMPORAL": "1",
+          "HELD_LIGHTS": "1",
+          "COLORED_LIGHTS": "1"
+        }
+      },
+      {
+        "file": "markti_shaders.hshader",
+        "name": "Markti Shader",
+        "preset": "Performance",
+        "format": "native",
+        "bytes": 10872,
+        "sha256": "c9d2c69ce7e9982bf5a8b4be84d514228923393f761b0ea338c7ac1651a01b98",
+        "settings": {
+          "reflection_steps": 24,
+          "colored_lights": true,
+          "block_light_strength": 1.0,
+          "shadow_softness": 1.0,
+          "pbr_materials": true,
+          "water_ripples": 0.85,
+          "water_reflections": true,
+          "water_mirror": false,
+          "water_caustics": true,
+          "water_clarity": 1.0,
+          "surface_reflections": true,
+          "ao_strength": 0.45,
+          "exposure": 1.0,
+          "saturation": 1.05
+        }
+      }
+    ],
+    "mods": [
+      {
+        "id": "markti_shaders_ultra_mod",
+        "name": "Markti Shaders Ultra Performance",
+        "file": "markti_shaders_ultra_mod.hnmod",
+        "preset": "UltraPerformance",
+        "hooks": 326,
+        "source": "native-mod/bundles/markti_shaders_ultra_mod",
+        "shader_folder": "native-markti_shaders_ultra_mod",
+        "bytes": 16082,
+        "sha256": "7ce6842b7e548720f1e360550a7cf96d59e13e913a519f0aa958788d93ff40f7"
+      },
+      {
+        "id": "markti_shaders_mod",
+        "name": "Markti Shader",
+        "file": "markti_shaders_mod.hnmod",
+        "preset": "Performance",
+        "hooks": 326,
+        "source": "native-mod/bundles/markti_shaders_mod",
+        "shader_folder": "native-markti_shaders_mod",
+        "bytes": 15867,
+        "sha256": "4ab735f105138baa3e0993186a1c4be4ac43dc9cf42387e944f04d1c6a04000a"
+      }
+    ]
+  },
+  "limitations": [
+    "Full launcher-built game execution was not run for this packaging correction; the actual trait libraries and embedded installers were checked.",
+    "The shader renderer retains the native API and screen-space visibility limits documented for 1.1.0.",
+    "Removing a mod leaves its installed shader folder and sidecar; the Mods toggle pauses the matching native-owned pack.",
+    "No new Horizon catalog listing or GitHub release is claimed."
+  ]
+}

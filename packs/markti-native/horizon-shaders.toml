@@ -1,7 +1,7 @@
 schema = 1
 id = "markti_shaders"
 name = "Markti Shader"
-version = "1.1.0"
+version = "1.1.1"
 api = "0.1"
 description = "Native Markti lighting, colored placed lights, material reflections and rippled water."
 authors = ["marktible"]

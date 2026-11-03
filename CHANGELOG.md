@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.1.1 — 2026-11-04
+
+- Fix Add from GitHub: supply two discoverable unpacked native mod bundles and
+  matching source-only `.hnmod` downloads, in addition to the shader packages.
+- Install the matching native shader once at the title screen, preserving the
+  selected shader, resolution, sidecars and other packs. Integrate its Mods toggle.
+- Use named hooks with native API 326 so supported official updates can build
+  without rebasing a client fork. Shader programs and preset budgets are unchanged.
+- Validate embedded payloads, installer updates/failures and real native bundles;
+  document the separate shader-pack and native-mod installation routes.
+
 ## 1.1.0 — 2026-11-03
 
 - Add native Horizon shader mods (`.hshader`) for the existing two presets,

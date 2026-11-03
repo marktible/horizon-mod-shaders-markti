@@ -8,13 +8,15 @@
 - The supported packs are **Markti Shader** (Performance) and **Markti Shaders
   Ultra Performance**. Native WGSL source is under `packs/markti-native`, with
   GLSL compatibility source under `packs/markti`. Target unmodified official Horizon.
+  Native mod installation uses supported hook points with shared installer source
+  in `native-mod/installer.rs`; its launcher-built extensions are supported too.
   Raytraced, Balance, Quality, and the custom client fork are retired; do not resume
   them unless the user explicitly requests it.
 - Follow the isolated test-session workflow in `docs/testing.md`; never test against
   a player's live save. Use the authoritative source paths listed in `DEVELOPING.md`.
 - Keep game assets, prepared resources, save files, accounts, and session data out
   of distributed artifacts.
-- Publish only current source, docs, the two native `.hshader` packages, the two
-  GLSL compatibility ZIPs and sanitized validation
+- Publish only current source, docs, the two native `.hshader` packages, two
+  source-only `.hnmod` bundles, the two GLSL compatibility ZIPs and sanitized validation
   summaries. Keep local archives, upstream checkouts, build outputs and raw runtime
   reports ignored. Preserve the repository's license and existing Git history.

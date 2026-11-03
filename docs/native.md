@@ -1,13 +1,15 @@
 # Native Horizon shader mods
 
-Markti 1.1.0 uses Horizon's `.hshader` format for the shader catalog. The native
+Markti uses Horizon's `.hshader` format for the shader catalog. The native
 WGSL source lives in `packs/markti-native`; the compatible GLSL source remains
 in `packs/markti`. They are two implementations of the same two named presets.
 
-A `.hnmod` is Rust code compiled into a launcher-built game. Renaming or wrapping
-GLSL as a native mod would not expose more renderer resources. Markti's native
-shader packages use the official typed shader API directly, so they gain its
-features without restoring the retired game-source fork.
+A `.hnmod` carries Rust source compiled into a launcher-built game. Since 1.1.1,
+the repository also supplies these bundles for **Add from GitHub**. They install
+the corresponding `.hshader` contents into a mod-owned folder once on the first
+frame. Rendering and Shader Options are identical in both installation routes;
+the mod wrapper adds installation and Mods toggle integration. See
+[installation](mod-install.md) and [shared installer source](../native-mod/README.md).
 
 ## What the native format adds
 

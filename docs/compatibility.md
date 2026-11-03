@@ -16,8 +16,12 @@ The source's old `RADIANCE_*` expression names are shader implementation names,
 not client extensions.
 
 A Rust `.hnmod` compiles into a launcher-built game. Wrapping the old renderer fork
-as a mod would still carry a build/update burden. The retired custom FSR and voxel
-client is not included. Upscaling and generation use official Horizon's controls.
+as a mod would still carry a build/update burden. Markti's 1.1.1 bundles instead
+implement `Hooks::frame` and use the instance-folder helper (native hooks API 326).
+Their `.hnmod` JSON manifests carry `"hooks": 326` so the launcher can build on
+later official clients with that API, rather than forcing the tested commit.
+The standalone shader packages still require no build. The retired custom FSR
+and voxel client is not included. Upscaling and generation use official controls.
 
 On an update, test both formats and saved options on the new unmodified client;
 update `tested_horizon` in `tools/package.py` and the exact loader/API revision in

@@ -1,0 +1,231 @@
+schema = 1
+id = "markti_shaders"
+name = "Markti Shader"
+version = "1.1.1"
+api = "0.1"
+description = "Native Markti lighting, colored placed lights, material reflections and rippled water."
+authors = ["marktible"]
+license = "MIT"
+shared = ["common.wgsl"]
+
+[sky]
+file = "sky.wgsl"
+clouds = false
+sun = true
+stars = true
+
+[material]
+file = "material.wgsl"
+files = ["trace.wgsl", "water.wgsl"]
+fog = false
+
+[shadow]
+resolution = 2048
+distance = 56.0
+
+[reflection]
+option = "water_mirror"
+
+[[post]]
+file = "post.wgsl"
+files = ["trace.wgsl"]
+name = "Markti reflections and grading"
+
+[budget]
+gpu_ms = 6.0
+
+[[materials]]
+id = 2
+sprites = ["block/short_grass", "block/tall_grass*", "block/fern", "block/large_fern*", "block/short_dry_grass", "block/tall_dry_grass*"]
+
+[[materials]]
+id = 10
+sprites = ["block/iron_block", "block/copper_block", "block/exposed_copper", "block/weathered_copper", "block/oxidized_copper"]
+
+[[materials]]
+id = 11
+sprites = ["block/gold_block"]
+
+[[materials]]
+id = 12
+sprites = ["block/obsidian", "block/crying_obsidian"]
+
+[[materials]]
+id = 13
+sprites = ["block/ice", "block/packed_ice", "block/blue_ice"]
+
+[[lights]]
+blocks = ["copper_torch", "copper_wall_torch", "copper_lantern"]
+color = [0.3, 1.0, 0.55]
+
+[[lights]]
+blocks = ["soul_torch", "soul_wall_torch", "soul_lantern", "soul_fire", "soul_campfire"]
+color = [0.2, 0.68, 1.0]
+
+[[lights]]
+blocks = ["redstone_torch", "redstone_wall_torch", "redstone_lamp"]
+color = [1.0, 0.12, 0.06]
+
+[[lights]]
+blocks = ["nether_portal"]
+color = [0.72, 0.12, 1.0]
+
+[[lights]]
+blocks = ["end_portal", "end_gateway"]
+color = [0.12, 0.55, 0.7]
+
+[[lights]]
+blocks = ["sea_lantern"]
+color = [0.58, 0.92, 1.0]
+
+[[lights]]
+blocks = ["glowstone", "torch", "wall_torch", "lantern", "fire", "campfire", "lava", "jack_o_lantern", "shroomlight"]
+color = [1.0, 0.68, 0.27]
+
+[[lights]]
+blocks = ["ochre_froglight"]
+color = [1.0, 0.75, 0.32]
+
+[[lights]]
+blocks = ["verdant_froglight"]
+color = [0.5, 1.0, 0.45]
+
+[[lights]]
+blocks = ["pearlescent_froglight"]
+color = [0.85, 0.55, 1.0]
+
+[[lights]]
+blocks = ["amethyst_cluster", "large_amethyst_bud", "medium_amethyst_bud", "small_amethyst_bud"]
+color = [0.66, 0.3, 1.0]
+
+[[options]]
+id = "reflection_steps"
+name = "Water reflection ray steps"
+type = "int"
+default = 24
+min = 12
+max = 40
+
+[[options]]
+id = "colored_lights"
+name = "Colored block and dynamic lights"
+type = "bool"
+default = true
+
+[[options]]
+id = "block_light_strength"
+name = "Block light brightness"
+type = "float"
+default = 1.0
+min = 0.0
+max = 1.5
+step = 0.1
+
+[[options]]
+id = "shadow_softness"
+name = "Shadow softness"
+type = "float"
+default = 1.0
+min = 0.0
+max = 2.0
+step = 0.25
+
+[[options]]
+id = "pbr_materials"
+name = "Resource-pack LabPBR materials"
+type = "bool"
+default = true
+
+[[options]]
+id = "water_ripples"
+name = "Water ripple strength"
+type = "float"
+default = 0.85
+min = 0.0
+max = 1.2
+step = 0.05
+
+[[options]]
+id = "water_reflections"
+name = "Water environment reflection"
+type = "bool"
+default = true
+
+[[options]]
+id = "water_mirror"
+name = "Extra terrain mirror pass"
+type = "bool"
+default = false
+
+[[options]]
+id = "water_caustics"
+name = "Shallow-water caustics"
+type = "bool"
+default = true
+
+[[options]]
+id = "water_clarity"
+name = "Water clarity"
+type = "float"
+default = 1.0
+min = 0.5
+max = 1.5
+step = 0.05
+
+[[options]]
+id = "surface_reflections"
+name = "Solid material reflections"
+type = "bool"
+default = true
+
+[[options]]
+id = "ao_strength"
+name = "Contact shading strength"
+type = "float"
+default = 0.45
+min = 0.0
+max = 0.8
+step = 0.05
+
+[[options]]
+id = "exposure"
+name = "Exposure"
+type = "float"
+default = 1.0
+min = 0.7
+max = 1.3
+step = 0.05
+
+[[options]]
+id = "saturation"
+name = "Color saturation"
+type = "float"
+default = 1.05
+min = 0.9
+max = 1.2
+step = 0.05
+
+[[pages]]
+id = "main"
+name = "Markti Shader"
+items = ["page:lighting", "page:water", "page:materials", "page:color"]
+
+[[pages]]
+id = "lighting"
+name = "Lighting"
+items = ["colored_lights", "block_light_strength", "shadow_softness"]
+
+[[pages]]
+id = "water"
+name = "Water"
+items = ["water_ripples", "water_reflections", "water_mirror", "water_clarity", "water_caustics", "reflection_steps"]
+
+[[pages]]
+id = "materials"
+name = "Materials"
+items = ["pbr_materials", "surface_reflections", "ao_strength"]
+
+[[pages]]
+id = "color"
+name = "Color"
+items = ["exposure", "saturation"]
