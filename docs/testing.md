@@ -25,8 +25,10 @@ python3 tools/control.py state
 python3 tools/control.py capture .local-test/markti/preview.png
 ```
 
-Add `--source` to link the editable source as `Markti Dev`. Without it the helper
-copies the release ZIPs. Use `--settings-from` with a closed preview's shaderpacks
+Native releases are selected by default. Use `--format glsl` for compatibility.
+Add `--source` to link the editable GLSL source as `Markti Dev`, or
+`--source-path packs/markti-native` for editable native source. Without either,
+the helper copies the release artifacts. Use `--settings-from` with a closed preview's shaderpacks
 folder to test saved sidecars in a fresh session. Finish with:
 
 ```bash
@@ -38,7 +40,7 @@ private home and a reload. Use `tools/control.py` only with the session's explic
 `HORIZON_CONTROL` socket. `python3 tools/reload_preview.py` toggles the selected pack
 and returns to play.
 
-Keep output scale at 100%, frame generation off and a modest frame cap for visual
+Keep output scale at 100%, frame generation off and a modest frame cap for ordinary visual
 checks. Confirm the actual renderer size. Check both packs in all three dimensions,
 water/reflection materials, grass and shadows. Change an option through the real
 Shader Options UI, leave the page, restart in a new private environment with a copy
@@ -50,3 +52,13 @@ translation while watching the same world locations, then walk with view bob on.
 Use an angled sun and moon: overhead light alone can hide a broken transform.
 The Rust regressions must use the loader revision pinned in `tools/bootstrap.sh`;
 an older expression evaluator can accept matrix indices that are wrong at runtime.
+
+For native changes, validate both `.hshader` files through the root Rust checker:
+it runs the official shader checker and registry page/release-file checks. Test
+colored placed lights while looking away from their sources, the color-off
+option, actual LabPBR maps in a private resource pack, held light with the official
+Dynamic Lights option enabled, water at shallow/grazing/downward views, optional
+mirror behavior, metals, tinted glass shadows and both non-Overworld dimensions.
+Use a non-falling material for a floating fixture's pool bed.
+`--scale 75` may be used for a separate native post-resolution mapping check;
+it affects only the private preview, not player settings or the default scale.

@@ -37,13 +37,27 @@ def main():
     )
     parser.add_argument("--output", type=Path, default=ROOT / ".local-test/markti")
     parser.add_argument("--pack", choices=["base", "ultra"], default="base")
+    parser.add_argument("--format", choices=["glsl", "native"], default="native")
+    parser.add_argument(
+        "--scale",
+        type=int,
+        default=100,
+        help="Private test render scale, 50..200 percent; default 100",
+    )
     parser.add_argument(
         "--source",
         action="store_true",
         help="Link editable Markti source as Markti Dev",
     )
+    parser.add_argument(
+        "--source-path",
+        type=Path,
+        help="Preview another editable GLSL or native shader folder as Markti Dev",
+    )
     parser.add_argument("--visible", action="store_true")
     args = parser.parse_args()
+    if not 50 <= args.scale <= 200:
+        parser.error("--scale must be between 50 and 200")
     client = args.client.resolve()
     resources = args.resources.resolve()
     out = args.output.resolve()
@@ -84,12 +98,21 @@ def main():
         p["file"]
         for p in manifest["packs"]
         if p["preset"] == ("Performance" if args.pack == "base" else "UltraPerformance")
+        and p.get("format", "glsl") == args.format
     )
-    if args.source:
-        selected = "Markti Dev"
-        (home / "shaderpacks" / selected).symlink_to(
-            ROOT / "packs/markti", target_is_directory=True
+    if args.source or args.source_path:
+        source = (
+            args.source_path.resolve() if args.source_path else ROOT / "packs/markti"
         )
+        if (
+            not (source / "shaders").is_dir()
+            and not (source / "horizon-shaders.toml").is_file()
+        ):
+            raise RuntimeError(
+                "Source folder has no GLSL shaders or native shader manifest"
+            )
+        selected = "Markti Dev"
+        (home / "shaderpacks" / selected).symlink_to(source, target_is_directory=True)
     if args.settings_from:
         for pack in manifest["packs"]:
             sidecar = pack["file"] + ".txt"
@@ -97,7 +120,7 @@ def main():
             if p.is_file():
                 shutil.copy2(p, home / "shaderpacks" / sidecar)
     (home / "horizon-graphics.txt").write_text(
-        "preset:custom\nresolutionScale:100\ngraphicsApi:vulkan\npickedShaderPack:"
+        f"preset:custom\nresolutionScale:{args.scale}\ngraphicsApi:vulkan\npickedShaderPack:"
         + selected
         + "\nfxaa:false\ntaa:false\nlod:0\nworkers:2\nupscaling:native\nframeGeneration:off\n"
     )

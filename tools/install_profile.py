@@ -39,6 +39,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--game-dir", required=True, type=Path)
     parser.add_argument("--pack", choices=["base", "ultra"], default="base")
+    parser.add_argument("--format", choices=["glsl", "native"], default="native")
+    parser.add_argument(
+        "--keep-selected",
+        action="store_true",
+        help="Install artifacts without changing the selected pack",
+    )
     parser.add_argument(
         "--launcher-dir",
         type=Path,
@@ -57,6 +63,7 @@ def main():
         p
         for p in manifest["packs"]
         if p["preset"] == ("Performance" if args.pack == "base" else "UltraPerformance")
+        and p.get("format", "glsl") == args.format
     )
     original = {graphics: graphics.read_bytes(), options: options.read_bytes()}
     backup = (
@@ -86,6 +93,11 @@ def main():
         if line.startswith("pickedShaderPack:"):
             if seen:
                 raise RuntimeError("Duplicate shader selection")
+            if args.keep_selected:
+                selected = {"file": line.partition(":")[2].strip()}
+                new.append(line)
+                seen = True
+                continue
             seen = True
             line = (
                 "pickedShaderPack:"
@@ -93,7 +105,9 @@ def main():
                 + ("\r\n" if line.endswith("\r\n") else "\n")
             )
         new.append(line)
-    if not seen:
+    if not seen and args.keep_selected:
+        selected = {"file": ""}
+    elif not seen:
         if new and not new[-1].endswith("\n"):
             new[-1] += "\n"
         new.append("pickedShaderPack:" + selected["file"] + "\n")

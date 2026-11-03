@@ -1,6 +1,10 @@
 # Validation evidence
 
-[validation-1.0.1.json](validation-1.0.1.json) records the tested official client,
+[validation-1.1.0.json](validation-1.1.0.json) records the native shader conversion,
+real shader/registry checks and isolated GPU tests. Its portable output is in
+[loader-1.1.0.txt](loader-1.1.0.txt) and [tests-1.1.0.txt](tests-1.1.0.txt).
+
+[validation-1.0.1.json](validation-1.0.1.json) records the earlier GLSL fix's official client,
 loader checks, camera regression coverage and summarized runtime results.
 [loader-1.0.1.txt](loader-1.0.1.txt) and [tests-1.0.1.txt](tests-1.0.1.txt) contain
 the portable check output. [documentation.json](documentation.json) is generated

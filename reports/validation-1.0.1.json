@@ -62,8 +62,7 @@
   },
   "limitations": [
     "Screen-space effects and low-resolution shadow edges can still vary across individual pixels.",
-    "Capped visual checks do not establish FPS targets or BC250 performance.",
-    "GPU checks were local; the hosted GitHub Actions workflow has not yet been observed."
+    "Capped visual checks do not establish FPS targets or BC250 performance."
   ],
   "packs": [
     {
@@ -116,5 +115,10 @@
         "COLORED_LIGHTS": "1"
       }
     }
-  ]
+  ],
+  "hosted_ci": {
+    "commit": "fa0c235218b9c70d530ad008b072ee76122251a2",
+    "run": 41656319309,
+    "conclusion": "success"
+  }
 }

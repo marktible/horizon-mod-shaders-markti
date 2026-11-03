@@ -6,9 +6,11 @@ Never claim an unrun check or test against a player's live save.
 
 ## Current direction
 
-Markti is a standalone GLSL shader pack for **official Horizon**. There are exactly
-two distributions: **Markti Shaders Ultra Performance** and **Markti Shader** (the
-former Performance preset). Balance, Quality and Raytraced are retired. The native
+Markti provides native `.hshader` shader mods for **official Horizon**, plus GLSL
+compatibility ZIPs. There are exactly two named presets in these two formats:
+**Markti Shaders Ultra Performance** and **Markti Shader** (the former Performance
+preset). This is the official native shader API, not a compiled Rust `.hnmod`.
+Balance, Quality and Raytraced are retired. The native
 Radiance client fork and unfinished 3.1.3 tracing work are archived under
 `.archive/radiance-legacy-2026-11-03`; they are not build inputs or supported releases.
 
@@ -22,12 +24,15 @@ Horizon's per-pack settings sidecars attached across pack updates.
 | Path | Purpose |
 | --- | --- |
 | [packs/markti/shaders](packs/markti/shaders) | Authoritative GLSL and standard block/item mappings |
+| [packs/markti-native](packs/markti-native) | Native WGSL material/water/sky/post source and typed options |
+| [horizon-registry.toml](horizon-registry.toml) | Public shader catalog page metadata |
+| [registry](registry) | Candidate entries for the two native shader IDs |
 | [lib/settings.glsl](packs/markti/shaders/lib/settings.glsl) | Option definitions and base defaults |
 | [shaders.properties](packs/markti/shaders/shaders.properties) | Shader Options pages, sliders and two profiles |
 | [lang/en_us.lang](packs/markti/shaders/lang/en_us.lang) | Player-facing labels and help |
-| [tools/package.py](tools/package.py) | Two deterministic ZIPs, version, checksums and compatibility metadata |
-| [src/main.rs](src/main.rs) | Official loader validation and buffer/shadow invariants |
-| [tools/install_profile.py](tools/install_profile.py) | Backup, install both packs, retire old Radiance ZIPs |
+| [tools/package.py](tools/package.py) | Deterministic native/GLSL packages, version, checksums and format metadata |
+| [src/main.rs](src/main.rs) | Official native API/catalog and GLSL loader validation, buffer/shadow invariants |
+| [tools/install_profile.py](tools/install_profile.py) | Backup, install either format, preserve selection on request and retire old Radiance ZIPs |
 | [tools/control.py](tools/control.py) | Explicit-socket private preview control |
 | [tools/check_docs.py](tools/check_docs.py) | Local documentation links and example syntax |
 | `reports/` | Sanitized release validation summaries and portable check output |
@@ -42,12 +47,12 @@ historical implementation names, not native-client dependencies.
 ./tools/bootstrap.sh
 cargo run --release -- packs/markti
 python3 tools/package.py
-cargo run --release -- packs/markti 'dist/Markti Shader.zip' 'dist/Markti Shaders Ultra Performance.zip'
+cargo run --locked --release -- packs/markti packs/markti-native dist/*.zip dist/*.hshader
 cargo test
 cargo fmt --check
 ```
 
-Packaging builds only the two named packs. Do not build a custom Horizon client.
+Packaging builds the two named presets in native and GLSL formats. Do not build a custom Horizon client.
 Use the installed official binary for [isolated visual checks](docs/testing.md),
 then verify options change, save and survive a restart. Test both packs in the
 Overworld, Nether and End. Validate water, foliage and reflective material behavior
@@ -159,8 +164,9 @@ evidence is safe to publish. The standard-library Python helpers were formatted
 for readability; they need no new runtime dependencies. `.github/workflows/validate.yml` runs bootstrap,
 formatting, unit tests, Clippy, Python syntax checks, deterministic ZIP comparison,
 the nine loader cases and documentation checks. GPU/world checks remain manual
-and isolated; hosted CI is not a substitute for them. A GitHub Actions run has not
-yet been observed.
+and isolated; hosted CI is not a substitute for them. The original publication's
+GitHub Actions run was later observed successful on commit `fa0c235` (run
+`41656319309`); a native-conversion CI result is not yet claimed.
 
 After cleanup, the nine loader cases, both unit regressions, formatting, Clippy
 and Python syntax checks passed again. The rebuilt ZIPs retain byte-identical
@@ -170,6 +176,87 @@ A clean export of the staged Git tree reproduced both ZIPs byte for byte,
 bootstrapped the official loader from scratch, and passed both unit tests and all
 nine loader cases. The publication audit found 97 tracked files (about 226 KiB),
 with no private session data, game assets, native binaries or credential material.
+
+## Native shader mods (1.1.0)
+
+The user requested a Horizon mod with more shader features. A Rust `.hnmod`
+wrapper alone does not expand the GLSL resource interface and requires a
+launcher-built game. The official `.hshader` API already exposes colored placed
+light, dynamic RGB light, LabPBR maps, translucent shadow colors and native water
+reflection resources. Work starts with a native shader core, usable directly or
+as a mod payload, while the existing GLSL release stays intact. No retired
+Raytraced/client-fork implementation is being resumed.
+
+The exact official November 3 API source and current upstream documentation were
+inspected. The official `horizon-shader` checker was built from the pinned source.
+`packs/markti-native` holds native material, water, shared reflection tracing, sky
+and post stages. Native light tables distinguish torch, soul, copper and other
+source colors. Water preserves the filtered non-periodic ripple field, rejects
+foreground refraction, uses depth absorption/caustics, and rejects the optional
+terrain mirror at the wrong water height. Solid metadata and depth-refined
+screen-space rays support visible geometry; the native backend's own visibility
+limits remain. Native material lighting is compressed into the shared display
+target; this is not a wholesale copy of the GLSL HDR/history pipeline.
+
+`tools/package.py` emits `markti_shaders.hshader` and
+`markti_shaders_ultra.hshader`, plus the existing compatibility ZIPs. Native names
+avoid spaces for registry downloads, while their visible names stay unchanged.
+Ultra lowers shadow/ray budgets and defaults to no LabPBR reads, solid SSR, screen
+AO or caustics. Both native presets enable colored light; held/dropped items also
+need Horizon's Dynamic Lights option. Typed overrides have four menu pages.
+
+The Rust validator now checks native source/artifacts with `horizon-shader-api`,
+and uses `horizon-mods`' actual `page` / `release_version` validation for the
+candidate registry entries, API, IDs and asset names. `Cargo.toml` pins Naga to
+the official revision's source patch; `Cargo.lock` records those dependencies.
+`tools/preview.py --source-path <folder>` previews either format; `--format`
+selects a release format. `tools/install_profile.py --keep-selected` installs
+files without changing the chosen shader. Sidecars are not silently migrated.
+
+`horizon-registry.toml`, `registry/*.toml` and `registry/README.md` prepare a
+`shader` catalog submission, not a Rust mod. The user made the repository public,
+verified through GitHub's API. `.github/workflows/native-release.yml` is a manual
+draft-release workflow after validation; no release or external review request
+has been created yet. Existing Git history and both license notices remain.
+
+The [native validation summary](reports/validation-1.1.0.json) records the real
+source/artifact/registry checks and GPU results. The official client rendered 26
+initial private-world cases, ten extra material/light/mirror cases, two final
+water views, six final exact-artifact preset/dimension cases, and a separate 75%
+configured restart frame. This covers source-offscreen colored lights, color
+on/off, water/metal/visible-entity reflections, tinted glass, camera motion,
+synthetic private LabPBR maps on/off and actual blue/warm held light with the
+official Dynamic Lights switch enabled. The pool bed/walls were made solid after
+the first fixture's sand fell; the final water views use that corrected fixture.
+Native saturation saved as `1.0999999791383743` and restored as `1.10` in a fresh
+client/home. The scaled check's control status reports the 1280×720 window size;
+it does not directly expose the native internal target size.
+
+Both unit regressions (315 legacy GLSL camera combinations), format, Clippy with
+warnings denied, Python syntax, workflow YAML/shell syntax, deterministic rebuild,
+native preset-budget contracts and archive checks passed. Native base uses 24
+water ray steps and 64 solid steps to retain thin-silhouette coverage; Ultra
+uses 12 water steps and disables the solid pass by default. The nine compatibility
+loader cases still pass, with no GLSL program changes. The compatibility README
+now distinguishes its format from native features. No benchmark was taken.
+Both formats were installed with `--keep-selected`; the existing GLSL selection,
+100% player scale, vanilla options, Extras and all sidecars were verified byte for
+byte unchanged. Select the `(Horizon)` entry to use the native implementation.
+Catalog publication remains a separate release/review step. No Rust native game
+build or retired engine code was installed.
+Native sidecars store booleans as numeric `0`/`1`, not TOML's `false`/`true`;
+use the actual UI or that representation when preparing a private test. Explicit
+opaque-color bilinear loads fix the filtering-sampler mismatch found by the GPU
+check. Two rotated caustic fields avoid a noise-cell grid. Non-Overworld daylight
+is zero. Preview `--scale` supports an isolated 75% metadata-coordinate regression
+while normal previews and the player profile remain at 100%.
+
+A clean export of the staged source reproduced all four packages and their
+manifest/checksums byte for byte, bootstrapped the pinned official loader, and
+passed the native source/artifact/catalog checks and nine GLSL loader cases.
+Documentation validation passed 47 local links and seven shell examples. The
+publication audit found 117 tracked files (about 317 KiB), with no game assets,
+private session data, native game binaries or credential material.
 
 ## Limits and maintenance
 

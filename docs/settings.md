@@ -1,20 +1,37 @@
-# Shader settings
+# Settings
 
-Select either Markti ZIP, then choose **Shader Options**. Click a value to advance,
-right-click for the previous value, shift-click to reset that option, or use Reset
-for the pack defaults. Horizon saves changes when leaving the page.
+Select the native `.hshader` or compatibility ZIP in Shader Packs and open
+**Shader Options**. Settings belong to that file's `.txt` sidecar. Native and GLSL
+choices are independent; installing another format does not translate them.
 
-- **Lighting:** held light on/off, white or item-colored held light, placed block-light brightness.
-- **Shadows:** resolution, range, filtering, darkness and shadow stabilization.
-- **Water:** reflections, ripples, refraction, clarity, caustics and reflection steps.
-- **Materials:** selected reflective blocks, screen ambient occlusion and compact water input.
-- **Color:** exposure, saturation and bloom.
+## Native packages
 
-The two profiles are Ultra Performance and Performance. Each ZIP starts with its
-own default profile. Changing a profile changes rendering budgets; changing one
-option can show Custom. Saved choices belong to that pack's stable filename.
+| Page | Controls |
+| --- | --- |
+| Lighting | Colored block/dynamic light, block light brightness, shadow softness |
+| Water | Ripple strength, environment/screen reflection, optional terrain mirror, clarity, shallow caustics, ray steps |
+| Materials | LabPBR resource-pack inputs, solid reflections, contact shading |
+| Color | Exposure, saturation |
 
-Ultra Performance omits solid reflections, screen AO, caustics and temporal shadow
-history by default. The base Markti Shader retains the former Performance budgets.
-Options can increase work beyond those defaults; old benchmark results are not a
-promise for a changed combination or a newer official client.
+Colored placed lights are on in both native presets. Held/dropped lights also
+require **Dynamic Lights** in Horizon's Extras settings. LabPBR needs a resource
+pack supplying `_n`/`_s` maps. The optional mirror adds another terrain draw and
+stays off in both presets. Ultra disables solid reflections, contact shading,
+caustics and LabPBR reads by default; its shadow map is 1024 instead of 2048 and
+its water reflection rays use 12 instead of 24 steps. Base solid reflections use
+64 steps to reduce holes around thin entity silhouettes; Ultra keeps that pass off.
+
+Native shadow-map resolution/range come from the packaged preset's manifest.
+They are not live WGSL options in this API. Shader Options can change softness.
+
+## GLSL compatibility packages
+
+The existing five pages remain: Lighting, Shadows, Water, Materials and Color.
+They retain per-pack resolution/range, filter and shadow-history options, held
+lighting controls, water, solid reflections, AO, bloom, exposure and saturation.
+Their two profiles are Ultra Performance and Performance. GLSL placed block light
+uses the ordinary scalar lightmap; colored held-item lighting remains optional.
+
+Upscaling and frame generation belong to official Horizon, with its own supported
+combinations. Neither format embeds a custom FSR implementation. Output scale
+is a client setting and is not changed by the shader settings.

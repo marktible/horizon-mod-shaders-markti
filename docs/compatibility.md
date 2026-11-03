@@ -1,25 +1,30 @@
 # Horizon compatibility
 
-Markti targets the unmodified official `nightly-2026-11-03-f42ef42`, commit
-`f42ef42ef6ceccb3c6a20bea2481d87949a51c81`. It distributes GLSL shader packs;
-there is no Horizon client patch, native mod or custom executable to port.
+Markti targets official `nightly-2026-11-03-f42ef42`, commit
+`f42ef42ef6ceccb3c6a20bea2481d87949a51c81`. Native `.hshader` packages use shader API
+0.1; GLSL compatibility ZIPs use Horizon's separate compatibility loader. Neither
+requires a game-source patch or custom executable.
 
-Horizon now provides a [Shader Options UI](https://github.com/horizon-rust/horizon/blob/fc02103818c212920fd24aa34a2b2f91ba49e56f/docs/shaders.md)
-for the GLSL format, including profiles, pages, sliders and saved selections.
-Markti uses that interface. Test new official builds and record the result; shader
-interfaces can still change, so this is not a promise of unlimited compatibility.
+The native format exposes colored placed/dynamic lights, LabPBR maps, translucent
+shadow colors and native surface/reflection resources. The GLSL resource set is
+different; the native block-light color grid is not a GLSL sampler. See the
+[native feature comparison and limits](native.md).
 
-Horizon also has a [native WGSL shader API](https://github.com/horizon-rust/horizon/blob/fc02103818c212920fd24aa34a2b2f91ba49e56f/docs/api/shaders-reference.md)
-with typed material inputs and a built-in block-light color grid. Its material
-resources differ from the GLSL compatibility API. A later WGSL port could use them;
-Markti does not pretend that grid exists in its current GLSL path.
+Both formats support the official Shader Options UI and per-file saved values.
+Native options are typed overrides; GLSL options come from `shaders.properties`.
+The source's old `RADIANCE_*` expression names are shader implementation names,
+not client extensions.
 
-[Native mods](https://github.com/horizon-rust/horizon/blob/fc02103818c212920fd24aa34a2b2f91ba49e56f/docs/native-mods.md)
-can use versioned hook points, but they still compile game code. Repackaging a
-renderer patch as a mod would not automatically remove its update burden.
-The retired custom FSR and voxel-light client is archived, not a Markti dependency.
+A Rust `.hnmod` compiles into a launcher-built game. Wrapping the old renderer fork
+as a mod would still carry a build/update burden. The retired custom FSR and voxel
+client is not included. Upscaling and generation use official Horizon's controls.
 
-On an update: keep the two ZIP filenames, install the new official Horizon,
-validate both packs and saved options, and update `tested_horizon` in the manifest
-through `tools/package.py`. Leave native upscaling/generation to Horizon's own
-[graphics implementation](https://github.com/horizon-rust/horizon/blob/fc02103818c212920fd24aa34a2b2f91ba49e56f/docs/graphics.md).
+On an update, test both formats and saved options on the new unmodified client;
+update `tested_horizon` in `tools/package.py` and the exact loader/API revision in
+`tools/bootstrap.sh` together. Native API 0.1 is experimental. The validator uses
+the official Naga source patch too, matching that revision's shader compiler.
+This avoids rebasing a game fork, not all future shader maintenance.
+
+References: [shader guide](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/shaders.md),
+[API](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/api/shaders-reference.md),
+[native mods](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/native-mods.md).

@@ -1,4 +1,4 @@
-# Markti Shaders
+# Markti GLSL compatibility shaders
 
 Original MIT-licensed shaders for official Horizon. Source defaults match
 **Markti Shader**, based on Performance. The packager also builds
@@ -12,3 +12,6 @@ Features include sun/moon shadows, procedural sky, rippled water, screen-space
 reflections, held-item lighting and dimension atmosphere. Placed lights use the
 normal scalar block-light map. Shader settings persist in Horizon's per-pack
 sidecar file; stable ZIP names preserve that association across updates.
+
+The separate native `.hshader` packages provide the native color-grid and LabPBR
+features. Renaming one of these GLSL ZIPs does not convert its renderer.

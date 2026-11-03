@@ -42,6 +42,8 @@ def main():
         ROOT / "README.md",
         ROOT / "CHANGELOG.md",
         ROOT / "packs/markti/README.md",
+        ROOT / "packs/markti-native/README.md",
+        ROOT / "registry/README.md",
         ROOT / "reports/README.md",
         *sorted((ROOT / "docs").glob("*.md")),
     ]

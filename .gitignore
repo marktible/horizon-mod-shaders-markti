@@ -16,6 +16,8 @@ __pycache__/
 /dist/*
 !/dist/Markti Shader.zip
 !/dist/Markti Shaders Ultra Performance.zip
+!/dist/markti_shaders.hshader
+!/dist/markti_shaders_ultra.hshader
 !/dist/manifest.json
 !/dist/SHA256SUMS
 

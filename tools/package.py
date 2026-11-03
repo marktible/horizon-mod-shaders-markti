@@ -5,11 +5,13 @@ from pathlib import Path
 import hashlib
 import json
 import re
+import tomllib
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
 SOURCE = ROOT / "packs/markti"
-VERSION = "1.0.1"
+NATIVE_SOURCE = ROOT / "packs/markti-native"
+VERSION = "1.1.0"
 TESTED_HORIZON = "nightly-2026-11-03-f42ef42"
 PRESETS = {
     "UltraPerformance": {
@@ -59,6 +61,64 @@ PRESETS = {
 }
 
 
+def native_files(preset, record):
+    files = {
+        p.name: p.read_bytes() for p in sorted(NATIVE_SOURCE.iterdir()) if p.is_file()
+    }
+    source = files["horizon-shaders.toml"].decode()
+    source = re.sub(
+        r"(?m)^name = .*$", "name = " + json.dumps(record["name"]), source, count=1
+    )
+    source = re.sub(
+        r"(?m)^version = .*$", "version = " + json.dumps(VERSION), source, count=1
+    )
+    values = {}
+    if preset == "UltraPerformance":
+        source = source.replace(
+            'id = "markti_shaders"', 'id = "markti_shaders_ultra"', 1
+        )
+        source = source.replace("resolution = 2048", "resolution = 1024", 1).replace(
+            "distance = 56.0", "distance = 48.0", 1
+        )
+        values = {
+            "reflection_steps": 12,
+            "water_ripples": 0.5,
+            "surface_reflections": False,
+            "ao_strength": 0.0,
+            "pbr_materials": False,
+            "water_caustics": False,
+        }
+
+    def option(match):
+        text = match[0]
+        key = re.search(r'(?m)^id = "([^"]+)"', text)[1]
+        if key in values:
+            text = re.sub(
+                r"(?m)^default = .*$",
+                "default = " + json.dumps(values[key]),
+                text,
+                count=1,
+            )
+        return text
+
+    source = re.sub(r"(?ms)^\[\[options\]\]\n.*?(?=^\[|\Z)", option, source)
+    files["horizon-shaders.toml"] = source.encode()
+    options = {o["id"]: o["default"] for o in tomllib.loads(source)["options"]}
+    return files, options
+
+
+def write_archive(output, files):
+    with zipfile.ZipFile(
+        output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9
+    ) as archive:
+        for name, data in sorted(files.items()):
+            info = zipfile.ZipInfo(name, date_time=(2026, 1, 1, 0, 0, 0))
+            info.compress_type = zipfile.ZIP_DEFLATED
+            info.external_attr = 0o100644 << 16
+            info.create_system = 3
+            archive.writestr(info, data, compresslevel=9)
+
+
 def build():
     dist = ROOT / "dist"
     dist.mkdir(exist_ok=True)
@@ -94,16 +154,36 @@ def build():
                 "file": output.name,
                 "name": record["name"],
                 "preset": preset,
+                "format": "glsl",
                 "bytes": output.stat().st_size,
                 "sha256": hashlib.sha256(output.read_bytes()).hexdigest(),
                 "settings": record["settings"],
             }
         )
         print(output.relative_to(ROOT))
+        native_id = (
+            "markti_shaders_ultra" if preset == "UltraPerformance" else "markti_shaders"
+        )
+        native_output = dist / (native_id + ".hshader")
+        files, values = native_files(preset, record)
+        write_archive(native_output, files)
+        results.append(
+            {
+                "file": native_output.name,
+                "name": record["name"],
+                "preset": preset,
+                "format": "native",
+                "bytes": native_output.stat().st_size,
+                "sha256": hashlib.sha256(native_output.read_bytes()).hexdigest(),
+                "settings": values,
+            }
+        )
+        print(native_output.relative_to(ROOT))
     manifest = {
         "name": "Markti Shaders",
         "version": VERSION,
-        "format": "Horizon compatibility shader pack (GLSL)",
+        "format": "Horizon native shader mod (.hshader), with GLSL compatibility packs",
+        "recommended_format": "native",
         "requires_custom_client": False,
         "tested_horizon": TESTED_HORIZON,
         "settings": "Horizon Shader Options; stable ZIP filenames retain sidecars across updates",

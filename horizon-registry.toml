@@ -1,0 +1,14 @@
+name = "Markti Shaders"
+summary = "Native colored lighting, material reflections, filtered shadows and rippled water for Horizon."
+description = """
+Markti Shader and Markti Shaders Ultra Performance use Horizon's native WGSL
+shader API. Features include colored placed and dynamic lights, LabPBR resource
+pack inputs, tinted translucent shadows, water refraction and screen-space
+reflections. Ultra Performance reduces the shadow and reflection budgets.
+
+Runs on official Horizon; no Rust native-mod build is required. The repository
+also includes the GLSL compatibility packs. See its compatibility and validation
+documents for the tested Horizon build and current renderer limitations.
+"""
+authors = ["marktible"]
+license = "MIT"

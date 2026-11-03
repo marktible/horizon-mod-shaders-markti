@@ -4,6 +4,7 @@ on:
   push:
   pull_request:
   workflow_dispatch:
+  workflow_call:
 
 permissions:
   contents: read
@@ -29,6 +30,6 @@ jobs:
         run: |
           python3 tools/package.py
           git diff --exit-code -- dist
-          cargo run --locked --release -- packs/markti 'dist/Markti Shader.zip' 'dist/Markti Shaders Ultra Performance.zip'
+          cargo run --locked --release -- packs/markti packs/markti-native dist/*.zip dist/*.hshader
       - name: Check documentation
         run: python3 tools/check_docs.py

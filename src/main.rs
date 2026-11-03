@@ -12,6 +12,85 @@ fn reads(program: &horizon_shaders::PostProgram, sampler: &str) -> bool {
 }
 
 fn check(path: &Path) -> Result<(), String> {
+    if horizon_shader_api::package::is_pack(path) {
+        let pack = horizon_shader_api::Pack::read(path)?;
+        let report = horizon_shader_api::check(&pack).map_err(|problems| {
+            problems
+                .iter()
+                .map(|p| format!("{p:?}"))
+                .collect::<Vec<_>>()
+                .join("\n")
+        })?;
+        for required in [
+            horizon_shader_api::StageKind::Sky,
+            horizon_shader_api::StageKind::Material,
+            horizon_shader_api::StageKind::Post,
+        ] {
+            if !report.stages.iter().any(|s| s.kind == required) {
+                return Err(format!("Missing native {required:?} stage"));
+            }
+        }
+        let material = report
+            .stages
+            .iter()
+            .find(|s| s.kind == horizon_shader_api::StageKind::Material)
+            .unwrap();
+        for resource in [
+            "block_light_colors",
+            "shadow_map",
+            "shadow_map_translucent",
+            "shadow_color",
+            "opaque_depth",
+            "opaque_color",
+        ] {
+            if !material.reads(resource) {
+                return Err(format!("Native Markti material is missing {resource}"));
+            }
+        }
+        if report.manifest.lights.is_empty() || report.shadow.is_none() {
+            return Err("Native Markti needs its colored light table and shadow settings".into());
+        }
+        let root = Path::new(env!("CARGO_MANIFEST_DIR"));
+        let entry: horizon_mods::index::registry::Entry = toml::from_str(
+            &std::fs::read_to_string(
+                root.join("registry")
+                    .join(format!("{}.toml", pack.manifest.id)),
+            )
+            .map_err(|e| e.to_string())?,
+        )
+        .map_err(|e| e.to_string())?;
+        horizon_mods::index::registry::page(
+            &entry,
+            &std::fs::read_to_string(root.join("horizon-registry.toml"))
+                .map_err(|e| e.to_string())?,
+        )?;
+        if path.is_file() {
+            let asset = path
+                .file_name()
+                .unwrap()
+                .to_str()
+                .ok_or("Non-UTF8 artifact name")?;
+            let tag = format!("v{}", pack.manifest.version);
+            let release = horizon_mods::index::registry::Release {
+                tag: &tag,
+                published: "2026-11-03",
+                notes: "Local registry validation only",
+                asset,
+                game: "26.3",
+                signature: None,
+            };
+            horizon_mods::index::registry::release_version(&entry, &release, path)?;
+        }
+        println!(
+            "{}: native {} {}: {} stages, shader API {}, color grid and shadow/refraction resources validated",
+            path.display(),
+            pack.manifest.id,
+            pack.manifest.version,
+            report.stages.len(),
+            pack.manifest.api
+        );
+        return Ok(());
+    }
     let pack = Pack::open(path).map_err(|e| e.to_string())?;
     let settings = pack.read_text("lib/settings.glsl").unwrap_or_default();
     let dimension_effects = pack.read_text("lib/dimension.glsl").is_some();

@@ -1,0 +1,213 @@
+{
+  "schema_version": 1,
+  "version": "1.1.0",
+  "tested_horizon": "nightly-2026-11-03-f42ef42",
+  "loader_revision": "f42ef42ef6ceccb3c6a20bea2481d87949a51c81",
+  "requires_custom_client": false,
+  "format": "native shader (.hshader), not compiled Rust (.hnmod)",
+  "checks": {
+    "glsl_source_and_release_dimension_cases": 9,
+    "native_source_and_release_checks": 3,
+    "native_shader_and_registry_page_release_checks": "passed",
+    "unit_tests": 2,
+    "legacy_glsl_camera_cases": 315,
+    "cargo_fmt": "passed",
+    "cargo_clippy_all_targets_warnings_denied": "passed",
+    "python_syntax": "passed",
+    "workflow_yaml_and_shell": "passed",
+    "deterministic_archives": "passed",
+    "native_preset_budget_contracts": "passed",
+    "clean_staged_export_reproduction_and_loader": "passed",
+    "documentation_links": 47,
+    "documentation_shell_examples": 7
+  },
+  "runtime": {
+    "client": "unmodified official nightly",
+    "world": "fresh private fixture plus closed private copies; no player save used",
+    "window_size": [
+      1280,
+      720
+    ],
+    "normal_render_scale_percent": 100,
+    "visual_cap_fps": 12,
+    "performance_measured": false,
+    "initial_cases": 26,
+    "additional_captures": 12,
+    "final_exact_artifact_dimension_cases": [
+      {
+        "preset": "base",
+        "dimension": "minecraft:overworld"
+      },
+      {
+        "preset": "base",
+        "dimension": "minecraft:the_nether"
+      },
+      {
+        "preset": "base",
+        "dimension": "minecraft:the_end"
+      },
+      {
+        "preset": "ultra",
+        "dimension": "minecraft:overworld"
+      },
+      {
+        "preset": "ultra",
+        "dimension": "minecraft:the_nether"
+      },
+      {
+        "preset": "ultra",
+        "dimension": "minecraft:the_end"
+      }
+    ],
+    "features_checked": [
+      "colored torch/soul/copper placed lights",
+      "source outside the view",
+      "native color-off setting",
+      "shallow and downward water views with a solid bed",
+      "water mirror enabled via native numeric sidecar",
+      "metal and visible-entity screen reflections",
+      "synthetic private LabPBR maps on/off",
+      "held soul and regular torches with official Dynamic Lights on",
+      "tinted glass sunlight",
+      "camera yaw, pitch and translation",
+      "native options saved and restored in a fresh session"
+    ],
+    "saved_setting": "saturation=1.0999999791383743",
+    "restart_color_label": "Color saturation: 1.10",
+    "scaled_check": {
+      "configured_percent": 75,
+      "status_reports_window_size": [
+        1280,
+        720
+      ],
+      "note": "Separate private visual mapping check; control status reports window size, not the native internal target size."
+    }
+  },
+  "artifacts": [
+    {
+      "file": "Markti Shaders Ultra Performance.zip",
+      "name": "Markti Shaders Ultra Performance",
+      "preset": "UltraPerformance",
+      "format": "glsl",
+      "bytes": 36958,
+      "sha256": "110c3c272154fb4ea4ccd0df22500e535d7e24e8f8580827902bda974d170e8c",
+      "settings": {
+        "WATER_REFRACTION": "1",
+        "WATER_CLARITY": "1.0",
+        "WATER_CAUSTICS": "0",
+        "COMPACT_WATER_BUFFER": "1",
+        "WATER_RIPPLE_STRENGTH": "0.5",
+        "SURFACE_REFLECTIONS": "0",
+        "SHADOW_RESOLUTION": "1024",
+        "SHADOW_DISTANCE": "48.0",
+        "SHADOW_FILTER": "0",
+        "BLOOM_STRENGTH": "0.08",
+        "SSR_STEPS": "12",
+        "AO_SAMPLES": "4",
+        "AO_STRENGTH": "0.0",
+        "SHADOW_TEMPORAL": "0",
+        "HELD_LIGHTS": "1",
+        "COLORED_LIGHTS": "0"
+      }
+    },
+    {
+      "file": "markti_shaders_ultra.hshader",
+      "name": "Markti Shaders Ultra Performance",
+      "preset": "UltraPerformance",
+      "format": "native",
+      "bytes": 10890,
+      "sha256": "3edcc88227c81360a0474b2cee5a7e32171bf395ae4e1a9a3df900f1076bd04c",
+      "settings": {
+        "reflection_steps": 12,
+        "colored_lights": true,
+        "block_light_strength": 1.0,
+        "shadow_softness": 1.0,
+        "pbr_materials": false,
+        "water_ripples": 0.5,
+        "water_reflections": true,
+        "water_mirror": false,
+        "water_caustics": false,
+        "water_clarity": 1.0,
+        "surface_reflections": false,
+        "ao_strength": 0.0,
+        "exposure": 1.0,
+        "saturation": 1.05
+      }
+    },
+    {
+      "file": "Markti Shader.zip",
+      "name": "Markti Shader",
+      "preset": "Performance",
+      "format": "glsl",
+      "bytes": 36957,
+      "sha256": "6600e50c1c044362ca05d06f979dfde52279d4195cb1b7772f4b643434129c11",
+      "settings": {
+        "WATER_REFRACTION": "1",
+        "WATER_CLARITY": "1.0",
+        "WATER_CAUSTICS": "1",
+        "COMPACT_WATER_BUFFER": "1",
+        "WATER_RIPPLE_STRENGTH": "0.85",
+        "SURFACE_REFLECTIONS": "1",
+        "SHADOW_RESOLUTION": "2048",
+        "SHADOW_DISTANCE": "56.0",
+        "SHADOW_FILTER": "2",
+        "BLOOM_STRENGTH": "0.16",
+        "SSR_STEPS": "20",
+        "AO_SAMPLES": "6",
+        "AO_STRENGTH": "0.60",
+        "SHADOW_TEMPORAL": "1",
+        "HELD_LIGHTS": "1",
+        "COLORED_LIGHTS": "1"
+      }
+    },
+    {
+      "file": "markti_shaders.hshader",
+      "name": "Markti Shader",
+      "preset": "Performance",
+      "format": "native",
+      "bytes": 10874,
+      "sha256": "ae61390a2d92a6db458d471c7735e78efadadaad51c3a6d356c8cbcca7020620",
+      "settings": {
+        "reflection_steps": 24,
+        "colored_lights": true,
+        "block_light_strength": 1.0,
+        "shadow_softness": 1.0,
+        "pbr_materials": true,
+        "water_ripples": 0.85,
+        "water_reflections": true,
+        "water_mirror": false,
+        "water_caustics": true,
+        "water_clarity": 1.0,
+        "surface_reflections": true,
+        "ao_strength": 0.45,
+        "exposure": 1.0,
+        "saturation": 1.05
+      }
+    }
+  ],
+  "publication": {
+    "repository_visibility": "public, confirmed via GitHub API",
+    "catalog_status": "candidate metadata validated locally; no submission or listing claimed",
+    "release_status": "manual draft-release workflow provided; no release created",
+    "prior_ci": {
+      "commit": "fa0c235218b9c70d530ad008b072ee76122251a2",
+      "run": 41656319309,
+      "conclusion": "success"
+    },
+    "this_revision_ci": "Hosted status is available in GitHub Actions; this report records local checks.",
+    "audited_tracked_files": 117
+  },
+  "limitations": [
+    "Native API 0.1 is experimental; only the named official client was GPU tested.",
+    "Native materials affect terrain; entities use the official client material lighting.",
+    "Screen-space reflections have visible-scene limits; native mirror contains terrain rather than entities.",
+    "RGB light is not diffuse path-traced bounce; roughness initially controls reflection strength rather than a full reflection cone.",
+    "No FPS or BC250 benchmark claim."
+  ],
+  "installation": {
+    "artifacts_installed": 4,
+    "previous_selection_preserved": true,
+    "player_render_scale_percent": 100,
+    "vanilla_extras_and_sidecars_preserved": true
+  }
+}

@@ -1,0 +1,8 @@
+id = "markti_shaders_ultra"
+kind = "shader"
+repo = "marktible/horizon-mod-shaders-markti"
+owners = ["marktible"]
+name = "Markti Shaders Ultra Performance"
+summary = "Markti's native shader effects with smaller shadow maps and reduced reflection work."
+authors = ["marktible"]
+license = "MIT"

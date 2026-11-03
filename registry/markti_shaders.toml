@@ -1,0 +1,8 @@
+id = "markti_shaders"
+kind = "shader"
+repo = "marktible/horizon-mod-shaders-markti"
+owners = ["marktible"]
+name = "Markti Shader"
+summary = "Native colored lights, material reflections, filtered shadows and rippled water."
+authors = ["marktible"]
+license = "MIT"
