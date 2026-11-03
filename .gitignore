@@ -1,0 +1,28 @@
+/target/
+/.upstream/
+/.archive/
+/.local-test/
+__pycache__/
+*.py[cod]
+/.venv/
+/.env
+/.env.*
+/saves/
+/sessions/
+/accounts/
+/resources/
+
+# Only the two public shader artifacts belong in dist.
+/dist/*
+!/dist/Markti Shader.zip
+!/dist/Markti Shaders Ultra Performance.zip
+!/dist/manifest.json
+!/dist/SHA256SUMS
+
+# Raw runtime/install reports can contain local paths and session state.
+/reports/*
+!/reports/README.md
+!/reports/validation-*.json
+!/reports/loader-*.txt
+!/reports/tests-*.txt
+!/reports/documentation.json

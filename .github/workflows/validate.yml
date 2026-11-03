@@ -1,0 +1,34 @@
+name: Validate shaders
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+      - name: Fetch the official validation loader
+        run: ./tools/bootstrap.sh
+      - name: Check Rust and Python
+        run: |
+          cargo fmt --check
+          cargo test --locked
+          cargo clippy --locked --all-targets -- -D warnings
+          python3 -m py_compile tools/*.py
+      - name: Rebuild and validate both packs
+        run: |
+          python3 tools/package.py
+          git diff --exit-code -- dist
+          cargo run --locked --release -- packs/markti 'dist/Markti Shader.zip' 'dist/Markti Shaders Ultra Performance.zip'
+      - name: Check documentation
+        run: python3 tools/check_docs.py

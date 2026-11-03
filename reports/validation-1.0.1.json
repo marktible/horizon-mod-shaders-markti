@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "version": "1.0.1",
+  "tested_horizon": "nightly-2026-11-03-f42ef42",
+  "loader_revision": "f42ef42ef6ceccb3c6a20bea2481d87949a51c81",
+  "requires_custom_client": false,
+  "validation": {
+    "source_and_release_dimension_cases": 9,
+    "unit_tests_passed": 2,
+    "camera_orientation_cases": 315,
+    "cargo_fmt": "passed",
+    "cargo_clippy_all_targets_warnings_denied": "passed",
+    "python_syntax": "passed",
+    "release_packaging": "passed; deterministic rebuild and archive/hash checks",
+    "documentation": "passed; 29 local links, six shell examples",
+    "workflow_syntax": "passed; YAML and bash -n",
+    "clean_staged_export": "passed; deterministic ZIPs, fresh bootstrap, two unit tests and nine loader cases",
+    "publication_audit": "passed; 97 files with no game data, native client binaries or credentials"
+  },
+  "runtime": {
+    "world": "new private fixture; no player save used",
+    "render_size": [
+      1280,
+      720
+    ],
+    "resolution_scale_percent": 100,
+    "visual_cap_fps": 12,
+    "performance_measured": false,
+    "before_after_shadow_captures": 28,
+    "poses": [
+      "yaw left",
+      "center",
+      "yaw right",
+      "pitch up",
+      "pitch down",
+      "translate left",
+      "translate forward"
+    ],
+    "dimensions_per_pack": [
+      "overworld",
+      "the_nether",
+      "the_end"
+    ],
+    "additional_checks": [
+      "angled moon rotations for both packs",
+      "walking with view bob and privately copied saved shader options"
+    ],
+    "floor_sampling": {
+      "base": {
+        "matched_world_points": 17,
+        "mean_brightness_range_before_8bit": 67.47058823529413,
+        "mean_brightness_range_after_8bit": 2.4313725490196085,
+        "max_brightness_range_after_8bit": 7.0
+      },
+      "ultra": {
+        "matched_world_points": 17,
+        "mean_brightness_range_before_8bit": 67.47058823529413,
+        "mean_brightness_range_after_8bit": 3.5882352941176503,
+        "max_brightness_range_after_8bit": 27.0
+      }
+    }
+  },
+  "limitations": [
+    "Screen-space effects and low-resolution shadow edges can still vary across individual pixels.",
+    "Capped visual checks do not establish FPS targets or BC250 performance.",
+    "GPU checks were local; the hosted GitHub Actions workflow has not yet been observed."
+  ],
+  "packs": [
+    {
+      "file": "Markti Shaders Ultra Performance.zip",
+      "name": "Markti Shaders Ultra Performance",
+      "preset": "UltraPerformance",
+      "bytes": 36868,
+      "sha256": "52ea523420712f5820ef969b502e6234345cd618547e37e3142b9ef45ee60b5e",
+      "settings": {
+        "WATER_REFRACTION": "1",
+        "WATER_CLARITY": "1.0",
+        "WATER_CAUSTICS": "0",
+        "COMPACT_WATER_BUFFER": "1",
+        "WATER_RIPPLE_STRENGTH": "0.5",
+        "SURFACE_REFLECTIONS": "0",
+        "SHADOW_RESOLUTION": "1024",
+        "SHADOW_DISTANCE": "48.0",
+        "SHADOW_FILTER": "0",
+        "BLOOM_STRENGTH": "0.08",
+        "SSR_STEPS": "12",
+        "AO_SAMPLES": "4",
+        "AO_STRENGTH": "0.0",
+        "SHADOW_TEMPORAL": "0",
+        "HELD_LIGHTS": "1",
+        "COLORED_LIGHTS": "0"
+      }
+    },
+    {
+      "file": "Markti Shader.zip",
+      "name": "Markti Shader",
+      "preset": "Performance",
+      "bytes": 36867,
+      "sha256": "3f9943ef006d5dd774e5540db83834eeeb80a9361c180baedf3575feeee294d1",
+      "settings": {
+        "WATER_REFRACTION": "1",
+        "WATER_CLARITY": "1.0",
+        "WATER_CAUSTICS": "1",
+        "COMPACT_WATER_BUFFER": "1",
+        "WATER_RIPPLE_STRENGTH": "0.85",
+        "SURFACE_REFLECTIONS": "1",
+        "SHADOW_RESOLUTION": "2048",
+        "SHADOW_DISTANCE": "56.0",
+        "SHADOW_FILTER": "2",
+        "BLOOM_STRENGTH": "0.16",
+        "SSR_STEPS": "20",
+        "AO_SAMPLES": "6",
+        "AO_STRENGTH": "0.60",
+        "SHADOW_TEMPORAL": "1",
+        "HELD_LIGHTS": "1",
+        "COLORED_LIGHTS": "1"
+      }
+    }
+  ]
+}

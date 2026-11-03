@@ -1,0 +1,60 @@
+{
+  "name": "Markti Shaders",
+  "version": "1.0.1",
+  "format": "Horizon compatibility shader pack (GLSL)",
+  "requires_custom_client": false,
+  "tested_horizon": "nightly-2026-11-03-f42ef42",
+  "settings": "Horizon Shader Options; stable ZIP filenames retain sidecars across updates",
+  "packs": [
+    {
+      "file": "Markti Shaders Ultra Performance.zip",
+      "name": "Markti Shaders Ultra Performance",
+      "preset": "UltraPerformance",
+      "bytes": 36868,
+      "sha256": "52ea523420712f5820ef969b502e6234345cd618547e37e3142b9ef45ee60b5e",
+      "settings": {
+        "WATER_REFRACTION": "1",
+        "WATER_CLARITY": "1.0",
+        "WATER_CAUSTICS": "0",
+        "COMPACT_WATER_BUFFER": "1",
+        "WATER_RIPPLE_STRENGTH": "0.5",
+        "SURFACE_REFLECTIONS": "0",
+        "SHADOW_RESOLUTION": "1024",
+        "SHADOW_DISTANCE": "48.0",
+        "SHADOW_FILTER": "0",
+        "BLOOM_STRENGTH": "0.08",
+        "SSR_STEPS": "12",
+        "AO_SAMPLES": "4",
+        "AO_STRENGTH": "0.0",
+        "SHADOW_TEMPORAL": "0",
+        "HELD_LIGHTS": "1",
+        "COLORED_LIGHTS": "0"
+      }
+    },
+    {
+      "file": "Markti Shader.zip",
+      "name": "Markti Shader",
+      "preset": "Performance",
+      "bytes": 36867,
+      "sha256": "3f9943ef006d5dd774e5540db83834eeeb80a9361c180baedf3575feeee294d1",
+      "settings": {
+        "WATER_REFRACTION": "1",
+        "WATER_CLARITY": "1.0",
+        "WATER_CAUSTICS": "1",
+        "COMPACT_WATER_BUFFER": "1",
+        "WATER_RIPPLE_STRENGTH": "0.85",
+        "SURFACE_REFLECTIONS": "1",
+        "SHADOW_RESOLUTION": "2048",
+        "SHADOW_DISTANCE": "56.0",
+        "SHADOW_FILTER": "2",
+        "BLOOM_STRENGTH": "0.16",
+        "SSR_STEPS": "20",
+        "AO_SAMPLES": "6",
+        "AO_STRENGTH": "0.60",
+        "SHADOW_TEMPORAL": "1",
+        "HELD_LIGHTS": "1",
+        "COLORED_LIGHTS": "1"
+      }
+    }
+  ]
+}

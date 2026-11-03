@@ -1,0 +1,9 @@
+packs/markti: dimension 0: 3 post pass(es), shadow=true at 2048 px / 56 blocks, terrain=true, water=true
+packs/markti: dimension -1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+packs/markti: dimension 1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+dist/Markti Shader.zip: dimension 0: 3 post pass(es), shadow=true at 2048 px / 56 blocks, terrain=true, water=true
+dist/Markti Shader.zip: dimension -1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+dist/Markti Shader.zip: dimension 1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+dist/Markti Shaders Ultra Performance.zip: dimension 0: 3 post pass(es), shadow=true at 1024 px / 48 blocks, terrain=true, water=true
+dist/Markti Shaders Ultra Performance.zip: dimension -1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true
+dist/Markti Shaders Ultra Performance.zip: dimension 1: 3 post pass(es), shadow=false at 1024 px / 160 blocks, terrain=true, water=true

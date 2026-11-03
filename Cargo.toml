@@ -1,0 +1,11 @@
+[package]
+name = "horizon-pack-check"
+version = "1.0.1"
+edition = "2024"
+license = "MIT"
+
+[dependencies]
+horizon-shaders = { path = ".upstream/horizon/crates/horizon-shaders" }
+
+[profile.release]
+opt-level = 2

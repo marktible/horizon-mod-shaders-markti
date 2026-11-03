@@ -1,0 +1,20 @@
+{
+  "documents": [
+    "AGENTS.md",
+    "DEVELOPING.md",
+    "README.md",
+    "CHANGELOG.md",
+    "packs/markti/README.md",
+    "reports/README.md",
+    "docs/compatibility.md",
+    "docs/releases.md",
+    "docs/rendering.md",
+    "docs/settings.md",
+    "docs/testing.md"
+  ],
+  "local_links_checked": 29,
+  "shell_blocks_checked": 6,
+  "python_blocks_checked": 0,
+  "errors": [],
+  "method": "Local link/anchor resolution, bash -n and ast.parse. Code examples were not executed against a player profile."
+}
