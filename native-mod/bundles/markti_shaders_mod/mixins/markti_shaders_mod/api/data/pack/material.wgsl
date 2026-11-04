@@ -2,6 +2,20 @@ override colored_lights: bool = true;
 override block_light_strength: f32 = 1.0;
 override shadow_softness: f32 = 1.0;
 override pbr_materials: bool = true;
+override soft_shadows: bool = true;
+
+fn shadow_sample(uv: vec2<f32>, depth: f32) -> vec3<f32> {
+    let opaque = textureSampleCompareLevel(shadow_map, shadow_sampler, uv, depth);
+    if opaque <= 0.0001 { return vec3<f32>(0.0); }
+    let translucent = textureSampleCompareLevel(shadow_map_translucent, shadow_sampler, uv, depth);
+    if translucent >= 0.9999 { return vec3<f32>(opaque); }
+    let size = vec2<i32>(textureDimensions(shadow_color));
+    let pixel = clamp(vec2<i32>(uv * vec2<f32>(size)), vec2<i32>(0), size - 1);
+    let glass = textureLoad(shadow_color, pixel, 0);
+    let transmission = mix(vec3<f32>(1.0), max(glass.rgb, vec3<f32>(0.025)),
+        clamp(glass.a * 1.4, 0.0, 1.0));
+    return opaque * mix(transmission, vec3<f32>(1.0), translucent);
+}
 
 fn shadow_tint(position: vec3<f32>, normal: vec3<f32>) -> vec3<f32> {
     if frame.has_shadow == 0u || frame.dimension != 0 { return vec3<f32>(1.0); }
@@ -9,24 +23,18 @@ fn shadow_tint(position: vec3<f32>, normal: vec3<f32>) -> vec3<f32> {
     var coord = shadow_position(position + normal * bias);
     if any(coord < vec3<f32>(0.002)) || any(coord > vec3<f32>(0.998)) { return vec3<f32>(1.0); }
     coord.z -= 0.000025;
+    let edge = max(abs(coord.x - 0.5), abs(coord.y - 0.5)) * 2.0;
+    if !soft_shadows {
+        return mix(shadow_sample(coord.xy, coord.z), vec3<f32>(1.0), smoothstep(0.80, 0.98, edge));
+    }
     let texel = shadow_softness / max(frame.shadow_resolution, 1.0);
     var light = vec3<f32>(0.0);
     for (var y = -1; y <= 1; y++) {
         for (var x = -1; x <= 1; x++) {
             let uv = coord.xy + vec2<f32>(f32(x), f32(y)) * texel;
-            let opaque = textureSampleCompareLevel(shadow_map, shadow_sampler, uv, coord.z);
-            let translucent = textureSampleCompareLevel(shadow_map_translucent, shadow_sampler, uv, coord.z);
-            let size = vec2<i32>(textureDimensions(shadow_color));
-            let pixel = clamp(vec2<i32>(uv * vec2<f32>(size)), vec2<i32>(0), size - 1);
-            let glass = textureLoad(shadow_color, pixel, 0);
-            // A translucent surface filters sunlight; an opaque blocker still
-            // wins. Keep transmission RGB through the PCF footprint.
-            let transmission = mix(vec3<f32>(1.0), max(glass.rgb, vec3<f32>(0.025)),
-                clamp(glass.a * 1.4, 0.0, 1.0));
-            light += opaque * mix(transmission, vec3<f32>(1.0), translucent);
+            light += shadow_sample(uv, coord.z);
         }
     }
-    let edge = max(abs(coord.x - 0.5), abs(coord.y - 0.5)) * 2.0;
     return mix(light / 9.0, vec3<f32>(1.0), smoothstep(0.80, 0.98, edge));
 }
 
@@ -69,8 +77,11 @@ fn material(input: MaterialInput) -> Surface {
         let golden = (1.0 - smoothstep(0.15, 0.65, abs(frame.light_direction.y))) * day;
         let sun = mix(vec3<f32>(2.5, 2.20, 1.72), vec3<f32>(3.15, 1.67, 0.72), golden);
         let key = mix(vec3<f32>(0.055, 0.10, 0.22), sun, day);
-        direct = key * max(dot(normal, frame.light_direction), 0.0) * sky *
-            (0.16 + 0.67 * day) * (1.0 - frame.rain * 0.85) * shadow_tint(input.position, input.normal);
+        let cosine = max(dot(normal, frame.light_direction), 0.0);
+        if cosine * sky > 0.0001 {
+            direct = key * cosine * sky * (0.16 + 0.67 * day) *
+                (1.0 - frame.rain * 0.85) * shadow_tint(input.position, input.normal);
+        }
     } else if frame.dimension == -1 {
         ambient = vec3<f32>(0.035, 0.018, 0.025) + linear_color(frame.fog_color) * 0.12;
     } else {
@@ -80,8 +91,10 @@ fn material(input: MaterialInput) -> Surface {
     var lamp_color = vec3<f32>(2.7, 1.65, 0.70);
     var dynamic = vec3<f32>(0.0);
     if colored_lights {
-        let lamp = block_light_color(input.position);
-        if lamp.a > 0.001 { lamp_color = lamp.rgb * 2.2; }
+        if block > 0.0001 {
+            let lamp = block_light_color(input.position);
+            if lamp.a > 0.001 { lamp_color = lamp.rgb * 2.2; }
+        }
         dynamic = input.colored_light * 1.8;
     } else {
         dynamic = vec3<f32>(dot(input.colored_light, vec3<f32>(0.2126, 0.7152, 0.0722))) * vec3<f32>(1.8, 1.45, 0.85);

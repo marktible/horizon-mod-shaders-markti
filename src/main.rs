@@ -53,12 +53,25 @@ fn check(path: &Path) -> Result<(), String> {
             "api/src/lib.rs",
             "api/src/payload.rs",
             "api/src/installer.rs",
+            "api/src/fsr.rs",
+            "api/src/runtime.rs",
+            "api/data/fsr1_rcas.wgsl",
+            "api/data/FSR1-LICENSE.txt",
             "api/data/pack/horizon-shaders.toml",
         ] {
             if !bundle.files.contains_key(&format!("{prefix}{required}")) {
                 return Err(format!("Native installer is missing {required}"));
             }
         }
+        let rcas = std::str::from_utf8(&bundle.files[&format!("{prefix}api/data/fsr1_rcas.wgsl")])
+            .map_err(|e| e.to_string())?;
+        let module = naga::front::wgsl::parse_str(rcas).map_err(|e| e.emit_to_string(rcas))?;
+        naga::valid::Validator::new(
+            naga::valid::ValidationFlags::all(),
+            naga::valid::Capabilities::default(),
+        )
+        .validate(&module)
+        .map_err(|e| e.to_string())?;
         println!(
             "{}: native mod {} {}: official bundle checks passed, hooks API 326, {} files",
             path.display(),

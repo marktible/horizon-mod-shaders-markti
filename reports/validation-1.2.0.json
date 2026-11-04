@@ -1,0 +1,730 @@
+{
+  "schema_version": 1,
+  "version": "1.2.0",
+  "tested_horizon": "nightly-2026-11-04-67dad0d",
+  "loader_revision": "67dad0d1a5adca139b426c8114e74a33b376ba64",
+  "native_hooks_api": 326,
+  "checks": {
+    "glsl_dimension_cases": 9,
+    "native_shader_source_and_artifact_checks": 3,
+    "native_bundle_and_rcas_naga_checks": 2,
+    "root_unit_tests": 4,
+    "generated_payload_regressions": {
+      "presets": 2,
+      "tests_each": 2,
+      "result": "passed"
+    },
+    "native_trait_api_compilation": "both passed against real official client library",
+    "archive_shared_source_shader_license_parity": "passed",
+    "cargo_fmt": "passed",
+    "cargo_clippy_all_targets_warnings_denied": "passed",
+    "python_syntax": "passed",
+    "deterministic_six_artifacts_and_unpacked_sources": "passed",
+    "clean_staged_export_packages_installers_docs": "passed",
+    "reproduced_dist_and_bundle_files": 54,
+    "audited_tracked_files": 184,
+    "documentation_links": 75,
+    "documentation_shell_examples": 9
+  },
+  "gpu_runtime": {
+    "executable": "Private trait-mod entry linked against the exact official Performance-profile client libraries; no engine source patches or player cache writes for this test executable.",
+    "actual_mods_ui": "both preset rows, FSR on/off and sharpness buttons present",
+    "settings_restart": "FSR ON and sharpness 0.4 restored in fresh private home from saved settings",
+    "cases": [
+      "Both presets at 67% and FSR enabled in Overworld",
+      "Both presets with FSR in Nether and End",
+      "Native-owned and standalone selected pack ownership",
+      "Matching native-owned mod toggled off/on; no shader selected",
+      "Base FSR at 100%, FSR off/on",
+      "Window resized from 941x1032 to 1920x1080 and back with FSR active"
+    ],
+    "shader_rejection_or_gpu_validation_errors": false,
+    "mcrs_launcher_built_client": "Supported native-build Performance output was separately launched with fresh private homes: both mod rows/settings appeared, base FSR rendered in Overworld, Nether and End, no shader rejection or GPU validation errors."
+  },
+  "flight_benchmark": {
+    "machine": {
+      "cpu": "Intel Core i3-1215U",
+      "gpu": "Intel Graphics ADL GT2 integrated",
+      "ram_gib": 8,
+      "os": "Linux",
+      "driver": "Mesa 26.2.6 Vulkan"
+    },
+    "procedure": "Fresh private seed-0 world per group; stationary 8 seconds, then 480-block forest flights at 20 blocks/s and pitch 30 degrees, cold forward and return over generated terrain. Wait for spawn generation, meshing and uploads to settle first. No concurrent game or compilation during measurement; extra per-pass timing off.",
+    "comparison": "Same official Performance-profile client library/entry for all groups. Before uses 1.1.1 shader payload with idle FSR-off wrapper. After includes 1.2.0 shader changes and stated resolution/streaming settings. Configuration comparison, not isolated FSR-only speedup.",
+    "results": {
+      "1.1.1 native 100% / auto streaming": {
+        "settings": {
+          "scale": 100,
+          "fsr1": false,
+          "workers": 0,
+          "chunk_updates": 0,
+          "upload_budget_kib": 0,
+          "render_distance": 12,
+          "window": [
+            1920,
+            1080
+          ],
+          "vsync": false,
+          "frame_cap": 260
+        },
+        "cases": [
+          {
+            "name": "stationary",
+            "seconds": 8.009,
+            "frames": 311,
+            "avg_fps": 38.831,
+            "p50_ms": 25.592,
+            "p95_ms": 30.757,
+            "p99_ms": 33.321,
+            "max_ms": 35.925,
+            "cpu": {
+              "avg_ms": 4.236,
+              "max_ms": 11.51,
+              "p50_ms": 3.912,
+              "p95_ms": 8.077,
+              "p99_ms": 9.94
+            },
+            "gpu": {
+              "avg_ms": 24.22,
+              "max_ms": 26.709,
+              "p50_ms": 24.177,
+              "p95_ms": 25.207,
+              "p99_ms": 25.938
+            },
+            "stream_after": {
+              "generated_chunks": 637,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 0,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          },
+          {
+            "name": "cold-flight",
+            "seconds": 23.984,
+            "frames": 619,
+            "avg_fps": 25.809,
+            "p50_ms": 30.912,
+            "p95_ms": 87.757,
+            "p99_ms": 118.047,
+            "max_ms": 160.709,
+            "cpu": {
+              "avg_ms": 11.296,
+              "max_ms": 59.562,
+              "p50_ms": 7.923,
+              "p95_ms": 29.45,
+              "p99_ms": 36.662
+            },
+            "gpu": {
+              "avg_ms": 35.014,
+              "max_ms": 176.593,
+              "p50_ms": 27.377,
+              "p95_ms": 75.02,
+              "p99_ms": 99.371
+            },
+            "stream_after": {
+              "generated_chunks": 1424,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 48,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          },
+          {
+            "name": "warm-return",
+            "seconds": 24.04,
+            "frames": 681,
+            "avg_fps": 28.328,
+            "p50_ms": 33.558,
+            "p95_ms": 58.082,
+            "p99_ms": 84.216,
+            "max_ms": 110.852,
+            "cpu": {
+              "avg_ms": 10.06,
+              "max_ms": 69.169,
+              "p50_ms": 6.265,
+              "p95_ms": 22.609,
+              "p99_ms": 34.363
+            },
+            "gpu": {
+              "avg_ms": 31.874,
+              "max_ms": 89.022,
+              "p50_ms": 29.585,
+              "p95_ms": 50.527,
+              "p99_ms": 71.105
+            },
+            "stream_after": {
+              "generated_chunks": 2257,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 0,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          }
+        ]
+      },
+      "1.2.0 FSR 67% / auto streaming": {
+        "settings": {
+          "scale": 67,
+          "fsr1": true,
+          "workers": 0,
+          "chunk_updates": 0,
+          "upload_budget_kib": 0,
+          "render_distance": 12,
+          "window": [
+            1920,
+            1080
+          ],
+          "vsync": false,
+          "frame_cap": 260
+        },
+        "cases": [
+          {
+            "name": "stationary",
+            "seconds": 8.02,
+            "frames": 390,
+            "avg_fps": 48.627,
+            "p50_ms": 20.006,
+            "p95_ms": 30.143,
+            "p99_ms": 35.396,
+            "max_ms": 46.226,
+            "cpu": {
+              "avg_ms": 5.516,
+              "max_ms": 29.319,
+              "p50_ms": 4.179,
+              "p95_ms": 13.175,
+              "p99_ms": 17.222
+            },
+            "gpu": {
+              "avg_ms": 18.534,
+              "max_ms": 26.736,
+              "p50_ms": 18.142,
+              "p95_ms": 22.334,
+              "p99_ms": 23.978
+            },
+            "stream_after": {
+              "generated_chunks": 637,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 0,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          },
+          {
+            "name": "cold-flight",
+            "seconds": 24.016,
+            "frames": 903,
+            "avg_fps": 37.601,
+            "p50_ms": 24.856,
+            "p95_ms": 44.717,
+            "p99_ms": 54.566,
+            "max_ms": 70.964,
+            "cpu": {
+              "avg_ms": 9.218,
+              "max_ms": 44.851,
+              "p50_ms": 5.593,
+              "p95_ms": 23.509,
+              "p99_ms": 31.287
+            },
+            "gpu": {
+              "avg_ms": 23.773,
+              "max_ms": 56.549,
+              "p50_ms": 21.244,
+              "p95_ms": 38.834,
+              "p99_ms": 47.802
+            },
+            "stream_after": {
+              "generated_chunks": 1447,
+              "pending_uploads": 390,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 32,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          },
+          {
+            "name": "warm-return",
+            "seconds": 24.038,
+            "frames": 1099,
+            "avg_fps": 45.719,
+            "p50_ms": 21.44,
+            "p95_ms": 31.405,
+            "p99_ms": 39.582,
+            "max_ms": 62.833,
+            "cpu": {
+              "avg_ms": 6.855,
+              "max_ms": 38.222,
+              "p50_ms": 4.734,
+              "p95_ms": 15.74,
+              "p99_ms": 23.742
+            },
+            "gpu": {
+              "avg_ms": 19.38,
+              "max_ms": 52.17,
+              "p50_ms": 18.908,
+              "p95_ms": 25.644,
+              "p99_ms": 32.483
+            },
+            "stream_after": {
+              "generated_chunks": 2257,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 0,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          }
+        ]
+      },
+      "1.2.0 native 100% / bounded streaming": {
+        "settings": {
+          "scale": 100,
+          "fsr1": false,
+          "workers": 2,
+          "chunk_updates": 64,
+          "upload_budget_kib": 16384,
+          "render_distance": 12,
+          "window": [
+            1920,
+            1080
+          ],
+          "vsync": false,
+          "frame_cap": 260
+        },
+        "cases": [
+          {
+            "name": "stationary",
+            "seconds": 8.021,
+            "frames": 286,
+            "avg_fps": 35.656,
+            "p50_ms": 27.619,
+            "p95_ms": 42.501,
+            "p99_ms": 46.712,
+            "max_ms": 48.898,
+            "cpu": {
+              "avg_ms": 5.945,
+              "max_ms": 25.931,
+              "p50_ms": 4.465,
+              "p95_ms": 18.46,
+              "p99_ms": 21.249
+            },
+            "gpu": {
+              "avg_ms": 25.999,
+              "max_ms": 31.099,
+              "p50_ms": 25.827,
+              "p95_ms": 28.037,
+              "p99_ms": 29.88
+            },
+            "stream_after": {
+              "generated_chunks": 637,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 0,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          },
+          {
+            "name": "cold-flight",
+            "seconds": 23.996,
+            "frames": 720,
+            "avg_fps": 30.005,
+            "p50_ms": 32.531,
+            "p95_ms": 49.503,
+            "p99_ms": 56.922,
+            "max_ms": 62.831,
+            "cpu": {
+              "avg_ms": 10.483,
+              "max_ms": 24.929,
+              "p50_ms": 11.195,
+              "p95_ms": 18.231,
+              "p99_ms": 22.519
+            },
+            "gpu": {
+              "avg_ms": 30.402,
+              "max_ms": 58.695,
+              "p50_ms": 28.899,
+              "p95_ms": 44.033,
+              "p99_ms": 52.201
+            },
+            "stream_after": {
+              "generated_chunks": 1423,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 24,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          },
+          {
+            "name": "warm-return",
+            "seconds": 24.024,
+            "frames": 857,
+            "avg_fps": 35.673,
+            "p50_ms": 28.264,
+            "p95_ms": 38.506,
+            "p99_ms": 49.206,
+            "max_ms": 61.562,
+            "cpu": {
+              "avg_ms": 9.323,
+              "max_ms": 38.729,
+              "p50_ms": 10.047,
+              "p95_ms": 17.758,
+              "p99_ms": 22.86
+            },
+            "gpu": {
+              "avg_ms": 25.395,
+              "max_ms": 53.088,
+              "p50_ms": 25.011,
+              "p95_ms": 32.154,
+              "p99_ms": 40.842
+            },
+            "stream_after": {
+              "generated_chunks": 2257,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 0,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          }
+        ]
+      },
+      "1.2.0 FSR 67% / bounded streaming": {
+        "settings": {
+          "scale": 67,
+          "fsr1": true,
+          "workers": 2,
+          "chunk_updates": 64,
+          "upload_budget_kib": 16384,
+          "render_distance": 12,
+          "window": [
+            1920,
+            1080
+          ],
+          "vsync": false,
+          "frame_cap": 260
+        },
+        "cases": [
+          {
+            "name": "stationary",
+            "seconds": 8.005,
+            "frames": 414,
+            "avg_fps": 51.718,
+            "p50_ms": 19.226,
+            "p95_ms": 26.322,
+            "p99_ms": 28.017,
+            "max_ms": 29.139,
+            "cpu": {
+              "avg_ms": 3.973,
+              "max_ms": 14.162,
+              "p50_ms": 3.403,
+              "p95_ms": 10.574,
+              "p99_ms": 12.713
+            },
+            "gpu": {
+              "avg_ms": 17.405,
+              "max_ms": 20.078,
+              "p50_ms": 17.351,
+              "p95_ms": 18.679,
+              "p99_ms": 19.544
+            },
+            "stream_after": {
+              "generated_chunks": 637,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 0,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          },
+          {
+            "name": "cold-flight",
+            "seconds": 24.009,
+            "frames": 925,
+            "avg_fps": 38.527,
+            "p50_ms": 25.065,
+            "p95_ms": 38.808,
+            "p99_ms": 44.18,
+            "max_ms": 51.705,
+            "cpu": {
+              "avg_ms": 8.399,
+              "max_ms": 28.532,
+              "p50_ms": 8.952,
+              "p95_ms": 15.684,
+              "p99_ms": 19.553
+            },
+            "gpu": {
+              "avg_ms": 23.261,
+              "max_ms": 43.89,
+              "p50_ms": 22.147,
+              "p95_ms": 33.794,
+              "p99_ms": 38.836
+            },
+            "stream_after": {
+              "generated_chunks": 1447,
+              "pending_uploads": 484,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 29,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          },
+          {
+            "name": "warm-return",
+            "seconds": 24.023,
+            "frames": 1090,
+            "avg_fps": 45.374,
+            "p50_ms": 21.738,
+            "p95_ms": 30.959,
+            "p99_ms": 39.283,
+            "max_ms": 48.108,
+            "cpu": {
+              "avg_ms": 7.655,
+              "max_ms": 25.215,
+              "p50_ms": 5.213,
+              "p95_ms": 15.344,
+              "p99_ms": 20.337
+            },
+            "gpu": {
+              "avg_ms": 19.54,
+              "max_ms": 39.549,
+              "p50_ms": 18.997,
+              "p95_ms": 25.39,
+              "p99_ms": 32.32
+            },
+            "stream_after": {
+              "generated_chunks": 2257,
+              "pending_uploads": 0,
+              "streaming": {
+                "decorating": 0,
+                "finishing": 0,
+                "generating": 0,
+                "lighting": 0,
+                "meshing": 0,
+                "protos": 0,
+                "queued": 0
+              }
+            }
+          }
+        ]
+      }
+    },
+    "rejected_tuning": {
+      "workers": 2,
+      "chunk_updates": 8,
+      "upload_budget_kib": 4096,
+      "reason": "Deferred 8489 sections at cold-flight endpoint and 7116 after return; rejected despite faster frame statistics."
+    },
+    "limitations": [
+      "One short run per configuration; scheduling, thermal state and world generation vary.",
+      "Return still reloads/remeshes sections and is not fully resident.",
+      "FSR Quality ratio did not sustain 60 FPS in this dense forest on this machine.",
+      "Bounded 64-section / 16 MiB tuning had 484 pending uploads at the 67% cold endpoint, clearing to zero on return; native 100% endpoint queues were zero.",
+      "Fallback-to-vanilla preliminary runs and diagnostic-instrumented runs excluded."
+    ]
+  },
+  "installation": {
+    "live_save_used": false,
+    "player_resolution_percent": 100,
+    "fsr_default": "off; explicit mod setting and client render scale required",
+    "streaming_tuning": "2 workers, 64 section uploads/frame, 16384 KiB/frame, backed up; no other player graphics/options changes",
+    "mcrs_supported_native_build": "Performance incremental rebuild succeeded in 7 seconds on official November 4 base, built and selected; player save not launched"
+  },
+  "artifacts": {
+    "name": "Markti Shaders",
+    "version": "1.2.0",
+    "format": "Horizon native mods (.hnmod), native shader packs (.hshader), GLSL compatibility ZIPs",
+    "recommended_format": "native",
+    "requires_custom_client": false,
+    "tested_horizon": "nightly-2026-11-04-67dad0d",
+    "settings": "Horizon Shader Options; stable ZIP filenames retain sidecars across updates",
+    "packs": [
+      {
+        "file": "Markti Shaders Ultra Performance.zip",
+        "name": "Markti Shaders Ultra Performance",
+        "preset": "UltraPerformance",
+        "format": "glsl",
+        "bytes": 36958,
+        "sha256": "110c3c272154fb4ea4ccd0df22500e535d7e24e8f8580827902bda974d170e8c",
+        "settings": {
+          "WATER_REFRACTION": "1",
+          "WATER_CLARITY": "1.0",
+          "WATER_CAUSTICS": "0",
+          "COMPACT_WATER_BUFFER": "1",
+          "WATER_RIPPLE_STRENGTH": "0.5",
+          "SURFACE_REFLECTIONS": "0",
+          "SHADOW_RESOLUTION": "1024",
+          "SHADOW_DISTANCE": "48.0",
+          "SHADOW_FILTER": "0",
+          "BLOOM_STRENGTH": "0.08",
+          "SSR_STEPS": "12",
+          "AO_SAMPLES": "4",
+          "AO_STRENGTH": "0.0",
+          "SHADOW_TEMPORAL": "0",
+          "HELD_LIGHTS": "1",
+          "COLORED_LIGHTS": "0"
+        }
+      },
+      {
+        "file": "markti_shaders_ultra.hshader",
+        "name": "Markti Shaders Ultra Performance",
+        "preset": "UltraPerformance",
+        "format": "native",
+        "bytes": 13716,
+        "sha256": "06a72d1a5b00c5311aa576d0e21c8a7d8ca95be7193956249921e07ada4faffe",
+        "settings": {
+          "reflection_steps": 12,
+          "colored_lights": true,
+          "block_light_strength": 1.0,
+          "shadow_softness": 1.0,
+          "soft_shadows": false,
+          "pbr_materials": false,
+          "water_ripples": 0.5,
+          "water_reflections": true,
+          "water_mirror": false,
+          "water_caustics": false,
+          "water_clarity": 1.0,
+          "surface_reflections": false,
+          "ao_strength": 0.0,
+          "exposure": 1.0,
+          "saturation": 1.05
+        }
+      },
+      {
+        "file": "Markti Shader.zip",
+        "name": "Markti Shader",
+        "preset": "Performance",
+        "format": "glsl",
+        "bytes": 36957,
+        "sha256": "6600e50c1c044362ca05d06f979dfde52279d4195cb1b7772f4b643434129c11",
+        "settings": {
+          "WATER_REFRACTION": "1",
+          "WATER_CLARITY": "1.0",
+          "WATER_CAUSTICS": "1",
+          "COMPACT_WATER_BUFFER": "1",
+          "WATER_RIPPLE_STRENGTH": "0.85",
+          "SURFACE_REFLECTIONS": "1",
+          "SHADOW_RESOLUTION": "2048",
+          "SHADOW_DISTANCE": "56.0",
+          "SHADOW_FILTER": "2",
+          "BLOOM_STRENGTH": "0.16",
+          "SSR_STEPS": "20",
+          "AO_SAMPLES": "6",
+          "AO_STRENGTH": "0.60",
+          "SHADOW_TEMPORAL": "1",
+          "HELD_LIGHTS": "1",
+          "COLORED_LIGHTS": "1"
+        }
+      },
+      {
+        "file": "markti_shaders.hshader",
+        "name": "Markti Shader",
+        "preset": "Performance",
+        "format": "native",
+        "bytes": 13700,
+        "sha256": "b7b59d6bfc925173ff9f90f445a3a689c9f8493495011126c6d7ce93600f1e41",
+        "settings": {
+          "reflection_steps": 24,
+          "colored_lights": true,
+          "block_light_strength": 1.0,
+          "shadow_softness": 1.0,
+          "soft_shadows": true,
+          "pbr_materials": true,
+          "water_ripples": 0.85,
+          "water_reflections": true,
+          "water_mirror": false,
+          "water_caustics": true,
+          "water_clarity": 1.0,
+          "surface_reflections": true,
+          "ao_strength": 0.45,
+          "exposure": 1.0,
+          "saturation": 1.05
+        }
+      }
+    ],
+    "mods": [
+      {
+        "id": "markti_shaders_ultra_mod",
+        "name": "Markti Shaders Ultra Performance",
+        "file": "markti_shaders_ultra_mod.hnmod",
+        "preset": "UltraPerformance",
+        "hooks": 326,
+        "source": "native-mod/bundles/markti_shaders_ultra_mod",
+        "shader_folder": "native-markti_shaders_ultra_mod",
+        "bytes": 24842,
+        "sha256": "916dc9c6241cfc8f9a379f406c548828c6548db7f2e038d3c9c4887e9c0235da"
+      },
+      {
+        "id": "markti_shaders_mod",
+        "name": "Markti Shader",
+        "file": "markti_shaders_mod.hnmod",
+        "preset": "Performance",
+        "hooks": 326,
+        "source": "native-mod/bundles/markti_shaders_mod",
+        "shader_folder": "native-markti_shaders_mod",
+        "bytes": 24528,
+        "sha256": "f95dc2ff124cc9965b1a2b09190c060622a7245f75e8f037b6035c7ace41565d"
+      }
+    ]
+  }
+}

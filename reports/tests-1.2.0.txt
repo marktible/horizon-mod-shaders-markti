@@ -1,0 +1,7 @@
+running 4 tests
+test native_installer::tests::failed_shader_write_does_not_publish_new_manifest ... ok
+test native_installer::tests::installs_repairs_and_preserves_player_files ... ok
+test tests::shadow_light_stays_in_world_space_and_moves_between_ticks ... ok
+test tests::shadow_light_ignores_yaw_pitch_and_view_roll ... ok
+
+test result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s

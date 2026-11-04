@@ -32,6 +32,16 @@ def main():
         assert (crate / "src/installer.rs").read_bytes() == (
             ROOT / "native-mod/installer.rs"
         ).read_bytes()
+        for shared in ("fsr.rs", "runtime.rs"):
+            assert (crate / "src" / shared).read_bytes() == (
+                ROOT / "native-mod" / shared
+            ).read_bytes(), f"Stale shared native runtime: {shared}"
+        assert (crate / "data/fsr1_rcas.wgsl").read_bytes() == (
+            ROOT / "native-mod/fsr1_rcas.wgsl"
+        ).read_bytes()
+        assert (crate / "data/FSR1-LICENSE.txt").read_bytes() == (
+            ROOT / "packs/markti-native/LICENSE.txt"
+        ).read_bytes()
         shader = next(
             p
             for p in manifest["packs"]

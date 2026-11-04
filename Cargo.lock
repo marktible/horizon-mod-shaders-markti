@@ -243,11 +243,12 @@ dependencies = [
 
 [[package]]
 name = "horizon-pack-check"
-version = "1.1.1"
+version = "1.2.0"
 dependencies = [
  "horizon-mods",
  "horizon-shader-api",
  "horizon-shaders",
+ "naga",
  "toml",
 ]
 

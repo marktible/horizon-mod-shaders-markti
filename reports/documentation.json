@@ -17,8 +17,8 @@
     "docs/settings.md",
     "docs/testing.md"
   ],
-  "local_links_checked": 61,
-  "shell_blocks_checked": 8,
+  "local_links_checked": 75,
+  "shell_blocks_checked": 9,
   "python_blocks_checked": 0,
   "errors": [],
   "method": "Local link/anchor resolution, bash -n and ast.parse. Code examples were not executed against a player profile."

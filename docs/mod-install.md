@@ -25,5 +25,17 @@ GitHub installation does not require a Horizon catalog listing.
 
 For a direct installation with no native build, download either `.hshader` from
 the [README](../README.md), copy it into `shaderpacks/`, and select it in the same
-Shader Packs screen. It uses the same rendering code. The native mod route adds
-launcher installation and the Mods toggle; it does not add another renderer.
+Shader Packs screen. It uses the same rendering code. The native mod route also adds FSR 1 through official render hooks.
+
+## FSR 1 (version 1.2.0)
+
+Update the mod source in the launcher and rebuild. Select the installed Markti
+pack, then use **Options → Mods → its Settings → FSR 1 (EASU + RCAS): ON**.
+In Horizon Graphics choose **67% render resolution** (approximately Quality) and
+**Native** upscaling. Both EASU and RCAS run before the hand and HUD. Sharpness
+defaults to 0.2; settings save per mod. FSR defaults off and preserves your render
+resolution. See [all ratios and limitations](settings.md).
+
+MCRS chooses the official base version. The tested November 4 commit is a baseline,
+not a forced downgrade; supported newer hook APIs can be rebuilt by the launcher.
+A standalone shader update cannot add Rust hooks to an already-built game.

@@ -4,11 +4,14 @@ mod installer;
 
 const FILES: &[(&str, &[u8])] = &[
     ("LICENSE", include_bytes!("../data/pack/LICENSE")),
+    ("LICENSE.txt", include_bytes!("../data/pack/LICENSE.txt")),
     ("README.md", include_bytes!("../data/pack/README.md")),
     ("common.wgsl", include_bytes!("../data/pack/common.wgsl")),
+    ("fsr1_easu.wgsl", include_bytes!("../data/pack/fsr1_easu.wgsl")),
     ("horizon-shaders.toml", include_bytes!("../data/pack/horizon-shaders.toml")),
     ("material.wgsl", include_bytes!("../data/pack/material.wgsl")),
     ("post.wgsl", include_bytes!("../data/pack/post.wgsl")),
+    ("present.wgsl", include_bytes!("../data/pack/present.wgsl")),
     ("sky.wgsl", include_bytes!("../data/pack/sky.wgsl")),
     ("trace.wgsl", include_bytes!("../data/pack/trace.wgsl")),
     ("water.wgsl", include_bytes!("../data/pack/water.wgsl")),

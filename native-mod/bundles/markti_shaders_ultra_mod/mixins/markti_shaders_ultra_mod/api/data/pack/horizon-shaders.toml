@@ -1,7 +1,7 @@
 schema = 1
 id = "markti_shaders_ultra"
 name = "Markti Shaders Ultra Performance"
-version = "1.1.1"
+version = "1.2.0"
 api = "0.1"
 description = "Native Markti lighting, colored placed lights, material reflections and rippled water."
 authors = ["marktible"]
@@ -30,6 +30,11 @@ option = "water_mirror"
 file = "post.wgsl"
 files = ["trace.wgsl"]
 name = "Markti reflections and grading"
+
+[[post]]
+file = "present.wgsl"
+files = ["fsr1_easu.wgsl"]
+name = "Markti presentation / FSR 1 EASU"
 
 [budget]
 gpu_ms = 6.0
@@ -131,6 +136,12 @@ max = 2.0
 step = 0.25
 
 [[options]]
+id = "soft_shadows"
+name = "Wide soft shadow filter"
+type = "bool"
+default = false
+
+[[options]]
 id = "pbr_materials"
 name = "Resource-pack LabPBR materials"
 type = "bool"
@@ -213,7 +224,7 @@ items = ["page:lighting", "page:water", "page:materials", "page:color"]
 [[pages]]
 id = "lighting"
 name = "Lighting"
-items = ["colored_lights", "block_light_strength", "shadow_softness"]
+items = ["colored_lights", "block_light_strength", "shadow_softness", "soft_shadows"]
 
 [[pages]]
 id = "water"

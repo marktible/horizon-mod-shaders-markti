@@ -55,9 +55,34 @@ def main():
         help="Preview another editable GLSL or native shader folder as Markti Dev",
     )
     parser.add_argument("--visible", action="store_true")
+    parser.add_argument("--width", type=int, default=1280)
+    parser.add_argument("--height", type=int, default=720)
+    parser.add_argument(
+        "--fps", type=int, default=12, help="Private frame cap; 260 for benchmarking"
+    )
+    parser.add_argument(
+        "--workers",
+        type=int,
+        default=2,
+        help="Chunk workers; 0 follows Horizon's automatic choice",
+    )
+    parser.add_argument("--native-mods", action="store_true", help="Install source bundles for a native API preview")
+    parser.add_argument("--mod-settings-from", type=Path, help="Closed private preview's horizon-mods/.horizon-mod-data folder")
+    parser.add_argument("--fsr1", action="store_true", help="Enable FSR 1 in this private native-mod preview")
+    parser.add_argument("--chunk-updates", type=int, default=0)
+    parser.add_argument("--upload-budget-kib", type=int, default=0)
+    parser.add_argument("--artifacts", type=Path, default=ROOT / "dist", help="Release directory for private before/after comparisons")
     args = parser.parse_args()
     if not 50 <= args.scale <= 200:
         parser.error("--scale must be between 50 and 200")
+    if min(args.width, args.height, args.fps) <= 0:
+        parser.error("--width, --height and --fps must be positive")
+    if min(args.workers, args.chunk_updates, args.upload_budget_kib) < 0:
+        parser.error("worker and upload limits cannot be negative")
+    if args.fsr1 and (not args.native_mods or args.format != "native"):
+        parser.error("--fsr1 needs --native-mods and --format native")
+    if args.mod_settings_from and not args.native_mods:
+        parser.error("--mod-settings-from needs --native-mods")
     client = args.client.resolve()
     resources = args.resources.resolve()
     out = args.output.resolve()
@@ -91,9 +116,23 @@ def main():
             home / "saves/MarktiPreview",
             ignore=shutil.ignore_patterns("session.lock"),
         )
-    manifest = json.loads((ROOT / "dist/manifest.json").read_text())
+    manifest = json.loads((args.artifacts / "manifest.json").read_text())
     for pack in manifest["packs"]:
-        shutil.copy2(ROOT / "dist" / pack["file"], home / "shaderpacks" / pack["file"])
+        shutil.copy2(args.artifacts / pack["file"], home / "shaderpacks" / pack["file"])
+    if args.native_mods:
+        (home / "horizon-native-mods").mkdir()
+        for mod in manifest["mods"]:
+            shutil.copy2(args.artifacts / mod["file"], home / "horizon-native-mods" / mod["file"])
+            settings = home / "horizon-mods/.horizon-mod-data" / mod["id"]
+            if args.mod_settings_from:
+                for name in ("fsr1", "fsr1_sharpness"):
+                    source = args.mod_settings_from / mod["id"] / name
+                    if source.is_file():
+                        settings.mkdir(parents=True, exist_ok=True)
+                        shutil.copy2(source, settings / name)
+            if args.fsr1:
+                settings.mkdir(parents=True, exist_ok=True)
+                (settings / "fsr1").write_text("1")
     selected = next(
         p["file"]
         for p in manifest["packs"]
@@ -122,10 +161,10 @@ def main():
     (home / "horizon-graphics.txt").write_text(
         f"preset:custom\nresolutionScale:{args.scale}\ngraphicsApi:vulkan\npickedShaderPack:"
         + selected
-        + "\nfxaa:false\ntaa:false\nlod:0\nworkers:2\nupscaling:native\nframeGeneration:off\n"
+        + f"\nfxaa:false\ntaa:false\nlod:0\nworkers:{args.workers}\nchunkUpdates:{args.chunk_updates}\nuploadBudgetKiB:{args.upload_budget_kib}\nupscaling:native\nframeGeneration:off\n"
     )
     (home / "options.txt").write_text(
-        "renderDistance:12\nsimulationDistance:8\nmaxFps:12\nenableVsync:false\ninactivityFpsLimit:minimized\nbobView:false\nguiScale:1\n"
+        f"renderDistance:12\nsimulationDistance:12\nmaxFps:{args.fps}\nenableVsync:false\ninactivityFpsLimit:minimized\nbobView:false\nguiScale:1\n"
     )
     private = {
         "HORIZON_HOME": str(home),
@@ -160,9 +199,9 @@ def main():
         "MarktiPreview",
         "--creative",
         "--width",
-        "1280",
+        str(args.width),
         "--height",
-        "720",
+        str(args.height),
     ]
     if not args.visible:
         command.append("--offscreen")

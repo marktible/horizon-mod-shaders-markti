@@ -1,7 +1,7 @@
 # Horizon compatibility
 
-Markti targets official `nightly-2026-11-03-f42ef42`, commit
-`f42ef42ef6ceccb3c6a20bea2481d87949a51c81`. Native `.hshader` packages use shader API
+Markti targets official `nightly-2026-11-04-67dad0d`, commit
+`67dad0d1a5adca139b426c8114e74a33b376ba64`. Native `.hshader` packages use shader API
 0.1; GLSL compatibility ZIPs use Horizon's separate compatibility loader. Neither
 requires a game-source patch or custom executable.
 
@@ -20,8 +20,11 @@ as a mod would still carry a build/update burden. Markti's 1.1.1 bundles instead
 implement `Hooks::frame` and use the instance-folder helper (native hooks API 326).
 Their `.hnmod` JSON manifests carry `"hooks": 326` so the launcher can build on
 later official clients with that API, rather than forcing the tested commit.
-The standalone shader packages still require no build. The retired custom FSR
-and voxel client is not included. Upscaling and generation use official controls.
+The standalone shader packages still require no build. The retired voxel/client fork is not included. Version 1.2.0 adds FSR 1 through
+`Hooks::shader_params` and `RenderHooks::world_drawn` in the native mod. It uses
+the official re-exported wgpu API; no renderer source is patched. The separate
+GLSL format and standalone shader packs do not provide the full FSR pipeline.
+Frame generation remains an official client feature.
 
 On an update, test both formats and saved options on the new unmodified client;
 update `tested_horizon` in `tools/package.py` and the exact loader/API revision in
@@ -29,6 +32,6 @@ update `tested_horizon` in `tools/package.py` and the exact loader/API revision 
 the official Naga source patch too, matching that revision's shader compiler.
 This avoids rebasing a game fork, not all future shader maintenance.
 
-References: [shader guide](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/shaders.md),
-[API](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/api/shaders-reference.md),
-[native mods](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/native-mods.md).
+References: [shader guide](https://github.com/horizon-rust/horizon/blob/67dad0d1a5adca139b426c8114e74a33b376ba64/docs/shaders.md),
+[API](https://github.com/horizon-rust/horizon/blob/67dad0d1a5adca139b426c8114e74a33b376ba64/docs/api/shaders-reference.md),
+[native mods](https://github.com/horizon-rust/horizon/blob/67dad0d1a5adca139b426c8114e74a33b376ba64/docs/native-mods.md).

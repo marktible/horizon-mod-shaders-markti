@@ -15,7 +15,7 @@ Balance, Quality and Raytraced are retired. The native
 Radiance client fork and unfinished 3.1.3 tracing work are archived under
 `.archive/radiance-legacy-2026-11-03`; they are not build inputs or supported releases.
 
-The initial stock-client target is `nightly-2026-11-03-f42ef42`. Horizon now exposes
+The current tested stock-client target is `nightly-2026-11-04-67dad0d`. Horizon now exposes
 GLSL Shader Options, profiles, pages and sliders. Lighting switches and visual
 preferences belong there, not in separate ZIP variants. Stable ZIP filenames keep
 Horizon's per-pack settings sidecars attached across pack updates.
@@ -27,6 +27,8 @@ Horizon's per-pack settings sidecars attached across pack updates.
 | [packs/markti/shaders](packs/markti/shaders) | Authoritative GLSL and standard block/item mappings |
 | [packs/markti-native](packs/markti-native) | Native WGSL material/water/sky/post source and typed options |
 | [native-mod/installer.rs](native-mod/installer.rs) | Shared native mod installer; source bundles are generated under `native-mod/bundles` |
+| [native-mod/runtime.rs](native-mod/runtime.rs), [fsr.rs](native-mod/fsr.rs), [fsr1_rcas.wgsl](native-mod/fsr1_rcas.wgsl) | Shared settings, ownership, supported render hooks and cached RCAS stage |
+| [tools/benchmark_flight.py](tools/benchmark_flight.py), [build_mod_preview.py](tools/build_mod_preview.py) | Private repeatable flight measurements and read-only reuse of official compiled libraries |
 | [tools/check_mod_api.py](tools/check_mod_api.py) | Compile both trait API crates against the actual official client library in private build storage |
 | [horizon-registry.toml](horizon-registry.toml) | Public shader catalog page metadata |
 | [registry](registry) | Candidate entries for the two native shader IDs |
@@ -316,6 +318,90 @@ A clean staged export reproduced the six artifacts and both unpacked bundles,
 then passed the payload installation tests and documentation check (61 links,
 eight shell blocks). The publication audit checked 159 tracked files and found
 no private environment paths or game/session data directories.
+
+## FSR 1 and flight frame times (1.2.0)
+
+`packs/markti-native/fsr1_easu.wgsl` ports AMD's twelve-tap directional EASU,
+including approximate reciprocals and the four-neighbor deringing clamp. Explicit
+loads/taps avoid dynamic array spills. Grading/SSR stay at internal resolution;
+`present.wgsl` runs EASU at output resolution when `frame.mods[7].x` is set.
+`native-mod/fsr1_rcas.wgsl` ports the five-tap RCAS limiter, with safe black/white
+channels, after EASU. The reference is AMD FidelityFX-FSR commit
+`a21ffb8f6c13233ba336352bdff293894c706575`; its full MIT notice is distributed as
+`packs/markti-native/LICENSE.txt` and with the mod's RCAS data.
+
+`native-mod/runtime.rs` registers both Mods rows, exposes saved FSR on/off and
+sharpness (default 0.2), and owns the flag only for its selected preset. It reads
+settings/selection once and on leaving menus, not while flying. `fsr.rs` uses
+`RenderHooks::world_drawn` to snapshot the output and run RCAS before hand/HUD.
+GPU resources persist until size/device/format changes; no per-frame pipeline,
+texture or bind-group creation occurs. The existing installer is unchanged.
+The packager embeds shared sources verbatim; parity checks cover them and AMD's
+notice. The root validator also parses/validates RCAS with the pinned Naga.
+
+Full FSR requires a launcher native-mod rebuild. Standalone `.hshader` packs
+retain normal presentation when no matching mod enables the flag; GLSL remains
+unchanged. FSR defaults off and does not change the user's 100% resolution.
+Use the selected mod's Settings plus Horizon render scale (67% approximately
+Quality, 59% Balanced, 50% Performance), and the client's Native upscaler.
+This is spatial FSR 1, without temporal reconstruction or frame generation.
+
+`material.wgsl` skips redundant shadow/color-grid reads and adds `soft_shadows`:
+Ultra uses one hardware-filtered comparison, base retains the wider filter.
+The isolated native-100% retest showed little net GPU gain, so this is a budget
+choice rather than a claimed cure for streaming stalls.
+
+`tools/preview.py` supports private window size, frame cap, worker/upload limits,
+native mod settings (including `--mod-settings-from` for private restarts) and an
+explicit release-artifact directory. Normal visual
+previews remain capped at 12 FPS. `tools/build_mod_preview.py` links only the
+Markti trait crates and an entry point against exact-version official launcher
+rlibs read-only; it changes no upstream source or player cache and distributes
+no executable. This allows actual render-hook testing with the same official
+Performance-profile renderer used by MCRS.
+`tools/benchmark_flight.py` uses a fresh seed-0 world for every group, waits for
+spawn to settle, then measures stationary, 480-block cold flight at 20 blocks/s,
+and warm return. It refuses concurrent game sessions and shader-load failures;
+raw frames and homes remain ignored. Test dimensions are 1920×1080, distance 12,
+VSync off, uncapped to 260, no TAA/FXAA/frame generation. Per-pass diagnostic
+timing is disabled for comparison runs. Player worlds are never opened.
+
+Validation passed: four root unit tests, nine GLSL dimension cases, three native
+shader checks, both real trait-crate compilations, both source-only bundle/RCAS
+Naga checks, shared-source/license/archive parity, both installers' two regressions
+and real private installs, formatting, Clippy with warnings denied and Python
+syntax. The unchanged GLSL archives retain their prior GPU evidence. Both native
+presets rendered with FSR in Overworld, Nether and End. The
+real Mods UI toggled FSR and saved sharpness 0.4; a fresh private restart restored
+both. FSR survived an actual window resize 941×1032 → 1920×1080 → 941×1032.
+Standalone/native-owned selection, mod off/on, no shader, FSR off/on and native
+100% presentation were exercised without shader rejection or GPU errors.
+
+[Measured forest results](reports/validation-1.2.0.json): cold-flight p99/worst
+were 118.05/160.71 ms before, 56.92/62.83 ms at 100% with bounded streaming,
+and 44.18/51.71 ms with FSR 67% plus bounded streaming. The latter averaged
+38.53 FPS cold / 45.37 FPS return, not sustained 60. These are short combined
+configuration comparisons, not an isolated FSR-only speed claim. Official
+`game.rs` upload handling lets explicit budgets bound section/byte bursts; the
+measured choice is workers 2, `chunkUpdates:64`, `uploadBudgetKiB:16384`. Its
+FSR cold queue had 484 pending sections and cleared by return; native 100%
+endpoint queues were empty. An 8-section/4096-KiB experiment was rejected for
+leaving thousands waiting. Invalid preliminary fallback-to-vanilla timings were
+also rejected and excluded. See [testing procedure](docs/testing.md).
+
+The closed MCRS profile received the two new source-only mods and this measured
+streaming tuning, with backups. Selection, all other graphics fields, vanilla
+options, FSR-off default and 100% resolution were preserved; no save was opened.
+The launcher's supported Performance incremental rebuild completed successfully
+in 7 seconds on the official November 4 base and selected its new native build.
+That launcher-built executable was separately tested in a fresh private home:
+its real Mods rows/settings and base FSR rendering in all three dimensions passed
+without GPU validation errors or shader fallback.
+A clean staged export reproduced all six artifacts and generated source bundles
+(54 files including manifest/checksums), and passed the real private installers
+and documentation check (75 local links, nine shell examples). The publication
+audit found 184 tracked files, with no machine home paths, game assets, worlds,
+account/session data, native binaries or raw frame reports.
 
 ## Limits and maintenance
 

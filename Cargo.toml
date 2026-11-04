@@ -1,6 +1,6 @@
 [package]
 name = "horizon-pack-check"
-version = "1.1.1"
+version = "1.2.0"
 edition = "2024"
 license = "MIT"
 
@@ -9,6 +9,7 @@ horizon-shaders = { path = ".upstream/horizon/crates/horizon-shaders" }
 horizon-shader-api = { path = ".upstream/horizon/crates/horizon-shader-api" }
 horizon-mods = { path = ".upstream/horizon/crates/horizon-mods", features = ["index"] }
 toml = "1.1.6"
+naga = { version = "30.0.0", features = ["wgsl-in"] }
 
 [patch.crates-io]
 naga = { path = ".upstream/horizon/third_party/naga" }

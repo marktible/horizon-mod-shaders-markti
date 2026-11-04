@@ -1,9 +1,9 @@
 {
   "schema": 1,
   "id": "markti_shaders_mod",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "game": "26.3",
-  "horizon": "f42ef42ef6ceccb3c6a20bea2481d87949a51c81",
+  "horizon": "67dad0d1a5adca139b426c8114e74a33b376ba64",
   "mixins": "ddd9700b21997c95d95ac6ee5ecafe3830cf622a",
   "hooks": 326
 }

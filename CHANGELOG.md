@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.0 — 2026-11-04
+
+- Add optional FSR 1 EASU + RCAS through supported native shader/render hooks,
+  with persistent per-mod toggles and sharpness. Keep 100% resolution and FSR off
+  by default; expose the settings in the actual Mods menu.
+- Cache RCAS resources across frames and unroll EASU taps. Add an optional faster
+  native shadow filter, enabled by Ultra's budget; base retains its wider filter.
+- Test on official November 4 Horizon with repeatable isolated forest flights.
+  Add private native-build reuse and flight benchmark tools; keep player saves
+  and raw frame reports out of distribution.
+
 ## 1.1.1 — 2026-11-04
 
 - Fix Add from GitHub: supply two discoverable unpacked native mod bundles and

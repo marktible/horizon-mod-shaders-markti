@@ -1,5 +1,10 @@
 # Validation evidence
 
+[validation-1.2.0.json](validation-1.2.0.json) records FSR GPU/settings/resize
+checks and matched forest flight frame times, including the rejected terrain-starving
+upload budget. Portable checks are in [loader-1.2.0.txt](loader-1.2.0.txt) and
+[tests-1.2.0.txt](tests-1.2.0.txt).
+
 [validation-1.1.1.json](validation-1.1.1.json) records the GitHub native-mod
 installation correction, actual trait API compilation, archive/payload checks
 and private installer tests. Portable checks are in
@@ -15,9 +20,10 @@ loader checks, camera regression coverage and summarized runtime results.
 the portable check output. [documentation.json](documentation.json) is generated
 by `python3 tools/check_docs.py`.
 
-Runtime tests used an isolated, newly generated world. The frame cap was for
-visual correctness, not benchmarking. There is no 60 FPS or BC250 performance
-claim in this release.
+Runtime tests use isolated, newly generated worlds. Versions through 1.1.1 used
+a visual frame cap and made no performance measurements. Version 1.2.0 includes
+explicit uncapped flight benchmarks on the documented Intel machine. No BC250
+benchmark or sustained 60 FPS claim is made.
 
 Raw captures, player state, machine paths, installation backups and historical
 Radiance evidence stay in ignored local storage. Do not publish those files here.

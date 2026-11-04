@@ -4,7 +4,9 @@ The launcher scans GitHub archives for `horizon-mixin.toml` or an unpacked
 `.hnmod` with `horizon-native.json`. `.hshader` files alone are not native mods.
 This directory supplies the missing installation format for the two presets.
 
-`installer.rs` is the shared authoritative installer. `tools/package.py` generates
+`installer.rs` is the shared authoritative installer. `runtime.rs` owns the
+supported mod/settings/shader/render hooks; `fsr.rs` caches the RCAS GPU objects,
+and `fsr1_rcas.wgsl` is the sharpening stage. `tools/package.py` generates
 `bundles/<id>/horizon-native.json`, `mixins/<id>/horizon-mixin.toml`, a trait-mod
 API crate and its embedded shader data. Edit
 the shared source or `packs/markti-native`, then regenerate; do not hand-edit
@@ -18,7 +20,10 @@ An I/O failure is logged once instead of panicking or retrying every frame.
 The shader programs are identical to the standalone `.hshader` preset.
 
 The native bundle requires hooks API 326 for the instance-directory helper, and
-implements `Hooks::frame`. No source injections or mixin transformation are used.
+uses the official `Hooks` and `RenderHooks` traits. No source injections or mixin
+transformation are used. FSR 1 settings default off, persist per mod and only
+affect its selected preset. EASU lives in the embedded shader; RCAS runs in the
+world-drawn hook before hand/HUD. See [controls](../docs/settings.md).
 The recorded Horizon/mixins commits are the
 tested baseline; the unpacked JSON keeps the hook-version compatibility contract
 when installed from GitHub. The launcher may build newer official source with

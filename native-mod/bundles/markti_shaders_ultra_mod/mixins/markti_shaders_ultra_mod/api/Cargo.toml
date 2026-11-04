@@ -1,9 +1,9 @@
 [package]
 name = "markti-shaders-ultra-mod-installer"
-version = "1.1.1"
+version = "1.2.0"
 edition = "2024"
 license = "MIT"
 publish = false
 
 [dependencies]
-horizon-client = { git = "https://github.com/horizon-rust/horizon", rev = "f42ef42ef6ceccb3c6a20bea2481d87949a51c81" }
+horizon-client = { git = "https://github.com/horizon-rust/horizon", rev = "67dad0d1a5adca139b426c8114e74a33b376ba64" }

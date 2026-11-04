@@ -7,8 +7,9 @@ in `packs/markti`. They are two implementations of the same two named presets.
 A `.hnmod` carries Rust source compiled into a launcher-built game. Since 1.1.1,
 the repository also supplies these bundles for **Add from GitHub**. They install
 the corresponding `.hshader` contents into a mod-owned folder once on the first
-frame. Rendering and Shader Options are identical in both installation routes;
-the mod wrapper adds installation and Mods toggle integration. See
+frame. Shader source and Shader Options are identical in both installation routes.
+The mod adds installation, Mods toggle integration and, since 1.2.0, optional
+FSR 1 EASU/RCAS presentation. See
 [installation](mod-install.md) and [shared installer source](../native-mod/README.md).
 
 ## What the native format adds
@@ -21,6 +22,7 @@ the mod wrapper adds installation and Mods toggle integration. See
 | Tinted glass shadows | Opaque and translucent depth maps plus `shadow_color`, filtered together |
 | Water | World-anchored filtered ripples, depth absorption, guarded refraction, screen-space reflection and an optional native terrain mirror |
 | Solid reflections | Native surface metadata and a screen-space ray with near-plane clipping and depth/receiving-plane rejection |
+| FSR 1 (native mod) | EASU at output resolution, then cached RCAS through `RenderHooks::world_drawn`, before hand/HUD |
 | Options | Typed WGSL overrides, four menu pages and per-file saved choices |
 
 The original Shader and Ultra Performance names and budgets remain distinct.
@@ -56,6 +58,6 @@ such as per-pack shadow resolution and temporal shadow history. Sidecars are not
 silently translated between the formats. There is no BC250 or 60 FPS claim for the
 new native implementation until a relevant benchmark is run.
 
-References: [official shader guide](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/shaders.md),
-[API reference](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/api/shaders-reference.md),
-[native mod guide](https://github.com/horizon-rust/horizon/blob/f42ef42ef6ceccb3c6a20bea2481d87949a51c81/docs/native-mods.md).
+References: [official shader guide](https://github.com/horizon-rust/horizon/blob/67dad0d1a5adca139b426c8114e74a33b376ba64/docs/shaders.md),
+[API reference](https://github.com/horizon-rust/horizon/blob/67dad0d1a5adca139b426c8114e74a33b376ba64/docs/api/shaders-reference.md),
+[native mod guide](https://github.com/horizon-rust/horizon/blob/67dad0d1a5adca139b426c8114e74a33b376ba64/docs/native-mods.md).

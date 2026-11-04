@@ -11,3 +11,7 @@ This is a `.hshader` shader package. It needs no Rust `.hnmod` or custom client.
 Colored lighting is not ray-traced diffuse bounce; the official API's lighting,
 material and reflection visibility limits apply. See the repository's native
 format documentation and validation summary for the tested build.
+
+Optional FSR 1 EASU is included for the launcher-built Markti native mod, which
+adds the matching RCAS stage before hand/HUD. Standalone packs use normal client
+presentation. AMD's MIT notice for the FSR ports is in LICENSE.txt.

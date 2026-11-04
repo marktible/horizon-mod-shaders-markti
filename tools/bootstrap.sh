@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 cd -- "$(dirname -- "$0")/.."
-revision=f42ef42ef6ceccb3c6a20bea2481d87949a51c81
+revision=67dad0d1a5adca139b426c8114e74a33b376ba64
 if [[ ! -d .upstream/horizon/.git ]]; then
     mkdir -p .upstream
     git init .upstream/horizon
